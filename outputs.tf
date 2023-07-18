@@ -5,8 +5,8 @@
 #############################################################################
 
 output "cluster_name" {
-    value = try(module.vpc_cluster.cluster_name, "")
-    description = "The name of the VPC cluster."
+  value       = try(module.vpc_cluster.cluster_name, "")
+  description = "The name of the VPC cluster."
 }
 
 output "cos_s3_endpoint_public" {
@@ -30,21 +30,21 @@ output "cos_bucket_name" {
 }
 
 output "icr_namespace" {
-    value       = try(module.icr.icr_namespace, "")
-    description = "The ICR namespace."
+  value       = try(module.icr.icr_namespace, "")
+  description = "The ICR namespace."
 }
 
 output "resource_group_name" {
-    value       = try(module.resource_group.resource_group_name, "")
-    description = "The name of the resource group."
+  value       = try(module.resource_group.resource_group_name, "")
+  description = "The name of the resource group."
 }
 
 output "resource_group_id" {
-    value       = try(module.resource_group.resource_group_id, "")
-    description = "The Id of the resource group."
+  value       = try(module.resource_group.resource_group_id, "")
+  description = "The Id of the resource group."
 }
 
 output "secrets_manager_instance_id" {
-    value       = try(module.sm.instance_id, "")
-    description = "The instance Id of the Secrets Manager instance."
+  value       = try(module.sm.instance_id, "")
+  description = "The instance Id of the Secrets Manager instance."
 }

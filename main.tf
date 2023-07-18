@@ -1,6 +1,6 @@
 
 locals {
-  cos_tier = ( 
+  cos_tier = (
     (var.cos_service_plan != "") ? var.cos_service_plan :
     (var.use_free_tier) ? "lite" : "standard"
   )
@@ -27,28 +27,28 @@ module "resource_group" {
 }
 
 module "icr" {
-  count                         = (var.create_icr) ? 1 : 0
-  source                        = "./icr"
-  depends_on                    = [module.resource_group]
-  registry_namespace            = var.registry_namespace
-  resource_group_id             = (var.icr_resource_group_id == "") ? module.resource_group.resource_group_id : var.icr_resource_group_id
+  count              = (var.create_icr) ? 1 : 0
+  source             = "./icr"
+  depends_on         = [module.resource_group]
+  registry_namespace = var.registry_namespace
+  resource_group_id  = (var.icr_resource_group_id == "") ? module.resource_group.resource_group_id : var.icr_resource_group_id
 }
 
 module "cos" {
-  count              = (var.create_cos) ? 1 : 0
-  source             = "./cos"
-  depends_on         = [module.resource_group]
-  instance_name      = var.cos_instance_name
-  service_plan       = local.cos_tier
-  instance_region    = (var.cos_instance_region == "") ? var.region : var.cos_instance_region
-  storage_class      = var.cos_storage_class
-  bucket_region      = (var.cos_bucket_region == "") ? var.region : var.cos_bucket_region
-  bucket_name        = var.cos_bucket_name
-  default_retention  = var.cos_default_retention
-  minimum_retention  = var.cos_minimum_retention
-  maximum_retention  = var.cos_maximum_retention
-  is_permanant       = var.is_permanant
-  resource_group_id  = (var.cos_resource_group_id == "") ? module.resource_group.resource_group_id : var.cos_resource_group_id
+  count             = (var.create_cos) ? 1 : 0
+  source            = "./cos"
+  depends_on        = [module.resource_group]
+  instance_name     = var.cos_instance_name
+  service_plan      = local.cos_tier
+  instance_region   = (var.cos_instance_region == "") ? var.region : var.cos_instance_region
+  storage_class     = var.cos_storage_class
+  bucket_region     = (var.cos_bucket_region == "") ? var.region : var.cos_bucket_region
+  bucket_name       = var.cos_bucket_name
+  default_retention = var.cos_default_retention
+  minimum_retention = var.cos_minimum_retention
+  maximum_retention = var.cos_maximum_retention
+  is_permanant      = var.is_permanant
+  resource_group_id = (var.cos_resource_group_id == "") ? module.resource_group.resource_group_id : var.cos_resource_group_id
 }
 
 module "sm" {
@@ -63,12 +63,12 @@ module "sm" {
 }
 
 module "cd" {
-  count              = (var.create_cd_instance) ? 1 : 0
-  source             = "./continuous_delivery"
-  instance_name      = var.cd_instance_name
-  service_plan       = local.cd_tier
-  instance_region    = (var.cd_instance_region == "") ? var.region : var.cd_instance_region
-  resource_group_id  = (var.cd_resource_group_id == "") ? module.resource_group.resource_group_id : var.cd_resource_group_id
+  count             = (var.create_cd_instance) ? 1 : 0
+  source            = "./continuous_delivery"
+  instance_name     = var.cd_instance_name
+  service_plan      = local.cd_tier
+  instance_region   = (var.cd_instance_region == "") ? var.region : var.cd_instance_region
+  resource_group_id = (var.cd_resource_group_id == "") ? module.resource_group.resource_group_id : var.cd_resource_group_id
 }
 
 module "vpc_cluster" {

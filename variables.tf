@@ -90,7 +90,7 @@ variable "create_cos" {
 variable "cos_instance_name" {
   type        = string
   description = "The name of the COS instance that contains the COS buckets."
-  default     = "cos-secure-pipelines-service"
+  default     = "my-cos-instance"
 }
 
 variable "cos_service_plan" {
@@ -160,6 +160,7 @@ variable "create_icr" {
   description = "Set to `true` to create ICR namespace"
   default     = true
 }
+
 variable "registry_namespace" {
   type        = string
   description = "A unique namespace within the IBM Cloud Container Registry region where the application image is stored."

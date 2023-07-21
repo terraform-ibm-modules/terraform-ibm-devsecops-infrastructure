@@ -87,10 +87,22 @@ variable "create_cos" {
   default     = true
 }
 
+variable "create_cos_bucket" {
+  type        = bool
+  description = "Set to `true` to create a COS bucket."
+  default     = true
+}
+
 variable "cos_instance_name" {
   type        = string
   description = "The name of the COS instance that contains the COS buckets."
   default     = "my-cos-instance"
+}
+
+variable "cos_instance_id" {
+  type        = string
+  description = "The Id of the COS instance that contains the COS buckets."
+  default     = ""
 }
 
 variable "cos_service_plan" {

@@ -10,23 +10,28 @@ output "cluster_name" {
 }
 
 output "cos_s3_endpoint_public" {
-  value       = try(module.cos[0].s3_endpoint_public, "")
+  value       = try(module.cos_bucket[0].s3_endpoint_public, "")
   description = "The COS bucket public endpoint."
 }
 
 output "cos_s3_endpoint_private" {
-  value       = try(module.cos[0].s3_endpoint_private, "")
+  value       = try(module.cos_bucket[0].s3_endpoint_private, "")
   description = "The COS bucket private endpoint."
 }
 
 output "cos_s3_endpoint_direct" {
-  value       = try(module.cos[0].s3_endpoint_direct, "")
+  value       = try(module.cos_bucket[0].s3_endpoint_direct, "")
   description = "The COS bucket direct endpoint."
 }
 
 output "cos_bucket_name" {
-  value       = try(module.cos[0].bucket_name, "")
+  value       = try(module.cos_bucket[0].bucket_name, "")
   description = "The name of COS bucket."
+}
+
+output "cos_instance_id" {
+  value       = try(module.cos[0].cos_instance_id, "")
+  description = "The instance Id of the COS instance."
 }
 
 output "icr_namespace" {

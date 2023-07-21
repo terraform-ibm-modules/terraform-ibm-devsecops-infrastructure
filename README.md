@@ -19,16 +19,17 @@ A Terraform module for provisioning the infrastructure required by the DevSecOps
 ## Usage
 
 ```hcl
-module "terraform_devsecops_alm" {
-  source                   = "git::https://github.com/terraform-ibm-modules/terraform-ibm-devsecops-infrastructure?ref=v1.0.0"
-  toolchain_region         = var.toolchain_region
-  toolchain_resource_group = var.toolchain_resource_group
-  registry_namespace       = var.registry_namespace
-  cluster_name             = var.cluster_name
-  sm_resource_group        = var.sm_resource_group
-  sm_name                  = var.sm_name
-  sm_location              = var.sm_location
-  sm_secret_group          = var.sm_secret_group
+module "terraform_devsecops_infra" {
+  source                   = "git::https://github.com/terraform-ibm-modules/terraform-ibm-devsecops-infrastructure?ref=v1.0.0-beta.1"
+  region                   = "us-south"
+  resource_group           = "my-resource-group" #creates the resource group
+  #or 
+  #existing_resource_group = "Default"
+  registry_namespace       = "my-registry-namespace-xyz1"
+  vpc_name                 = "my-vpc-cluster-name"
+  cluster_name             = "my-cluster"
+  cos_bucket_name          = "my-cos-bucket-xyz1"
+  cos_instance_name        = "my-cos-instance"
 }
 
 ```
@@ -59,7 +60,8 @@ statement instead the previous block.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_cd"></a> [cd](#module\_cd) | ./continuous_delivery | n/a |
-| <a name="module_cos"></a> [cos](#module\_cos) | ./cos | n/a |
+| <a name="module_cos"></a> [cos](#module\_cos) | ./cos/cos_instance | n/a |
+| <a name="module_cos_bucket"></a> [cos\_bucket](#module\_cos\_bucket) | ./cos/cos_bucket | n/a |
 | <a name="module_icr"></a> [icr](#module\_icr) | ./icr | n/a |
 | <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | ./resource_group | n/a |
 | <a name="module_sm"></a> [sm](#module\_sm) | ./secrets_manager/secrets_manager_instance | n/a |
@@ -81,7 +83,8 @@ No resources.
 | <a name="input_cos_bucket_name"></a> [cos\_bucket\_name](#input\_cos\_bucket\_name) | Set the name of your COS bucket. | `string` | `""` | no |
 | <a name="input_cos_bucket_region"></a> [cos\_bucket\_region](#input\_cos\_bucket\_region) | The COS region. | `string` | `""` | no |
 | <a name="input_cos_default_retention"></a> [cos\_default\_retention](#input\_cos\_default\_retention) | The default retention period are defined by this policy and apply to all objects in the bucket. | `string` | `"365"` | no |
-| <a name="input_cos_instance_name"></a> [cos\_instance\_name](#input\_cos\_instance\_name) | The name of the COS instance that contains the COS buckets. | `string` | `"cos-secure-pipelines-service"` | no |
+| <a name="input_cos_instance_id"></a> [cos\_instance\_id](#input\_cos\_instance\_id) | The Id of the COS instance that contains the COS buckets. | `string` | `""` | no |
+| <a name="input_cos_instance_name"></a> [cos\_instance\_name](#input\_cos\_instance\_name) | The name of the COS instance that contains the COS buckets. | `string` | `"my-cos-instance"` | no |
 | <a name="input_cos_instance_region"></a> [cos\_instance\_region](#input\_cos\_instance\_region) | The location of the COS instance. | `string` | `"global"` | no |
 | <a name="input_cos_maximum_retention"></a> [cos\_maximum\_retention](#input\_cos\_maximum\_retention) | Specifies maximum duration of time an object that can be kept unmodified in the bucket. | `string` | `"730"` | no |
 | <a name="input_cos_minimum_retention"></a> [cos\_minimum\_retention](#input\_cos\_minimum\_retention) | Specifies minimum duration of time an object must be kept unmodified in the bucket. | `string` | `"365"` | no |
@@ -91,6 +94,7 @@ No resources.
 | <a name="input_create_cd_instance"></a> [create\_cd\_instance](#input\_create\_cd\_instance) | Set to `true` to create the CD instance. | `bool` | `true` | no |
 | <a name="input_create_cluster"></a> [create\_cluster](#input\_create\_cluster) | Set to `true` to create cluster. | `bool` | `true` | no |
 | <a name="input_create_cos"></a> [create\_cos](#input\_create\_cos) | Set to `true` to create COS. | `bool` | `true` | no |
+| <a name="input_create_cos_bucket"></a> [create\_cos\_bucket](#input\_create\_cos\_bucket) | Set to `true` to create a COS bucket. | `bool` | `true` | no |
 | <a name="input_create_icr"></a> [create\_icr](#input\_create\_icr) | Set to `true` to create ICR namespace | `bool` | `true` | no |
 | <a name="input_create_sm"></a> [create\_sm](#input\_create\_sm) | Set to `true` to create Secrets Manager instance. | `bool` | `true` | no |
 | <a name="input_existing_resource_group"></a> [existing\_resource\_group](#input\_existing\_resource\_group) | The name of an existing resource group to use. This supercedes the creation of a named resource group. See `resource_group` input. | `string` | `""` | no |
@@ -119,6 +123,7 @@ No resources.
 |------|-------------|
 | <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | The name of the VPC cluster. |
 | <a name="output_cos_bucket_name"></a> [cos\_bucket\_name](#output\_cos\_bucket\_name) | The name of COS bucket. |
+| <a name="output_cos_instance_id"></a> [cos\_instance\_id](#output\_cos\_instance\_id) | The instance Id of the COS instance. |
 | <a name="output_cos_s3_endpoint_direct"></a> [cos\_s3\_endpoint\_direct](#output\_cos\_s3\_endpoint\_direct) | The COS bucket direct endpoint. |
 | <a name="output_cos_s3_endpoint_private"></a> [cos\_s3\_endpoint\_private](#output\_cos\_s3\_endpoint\_private) | The COS bucket private endpoint. |
 | <a name="output_cos_s3_endpoint_public"></a> [cos\_s3\_endpoint\_public](#output\_cos\_s3\_endpoint\_public) | The COS bucket public endpoint. |

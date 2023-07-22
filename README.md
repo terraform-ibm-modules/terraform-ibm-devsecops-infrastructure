@@ -142,25 +142,25 @@ statement instead the previous block.
 - [ Complete example](examples/complete)
 <!-- END EXAMPLES HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Requirements
+### Requirements
 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3, < 1.6 |
 
-## Modules
+### Modules
 
 No modules.
 
-## Resources
+### Resources
 
 No resources.
 
-## Inputs
+### Inputs
 
 No inputs.
 
-## Outputs
+### Outputs
 
 No outputs.
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

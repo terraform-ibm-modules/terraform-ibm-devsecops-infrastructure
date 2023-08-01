@@ -53,3 +53,8 @@ output "secrets_manager_instance_id" {
   value       = try(module.sm[0].instance_id, "")
   description = "The instance Id of the Secrets Manager instance."
 }
+
+output "keyprotect_instance_id" {
+  value       = try(module.kp[0].instance_id, "")
+  description = "The instance Id of the Key Protect instance."
+}

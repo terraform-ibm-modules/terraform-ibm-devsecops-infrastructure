@@ -104,10 +104,10 @@ module "vpc_cluster" {
   resource_group_id = (var.cluster_resource_group_id == "") ? module.resource_group.resource_group_id : var.cluster_resource_group_id
 }
 
-#module "container_cluster" {
-#  count             = (local.use_free_cluster) ? 1 : 0
-#  source            = "./cluster/container_cluster"
-#  depends_on        = [module.resource_group]
-#  cluster_name      = var.cluster_name
-#  resource_group_id = (var.cluster_resource_group_id == "") ? module.resource_group.resource_group_id : var.cluster_resource_group_id
-#}
+module "container_cluster" {
+  count             = (local.use_free_cluster) ? 1 : 0
+  source            = "./cluster/container_cluster"
+  depends_on        = [module.resource_group]
+  cluster_name      = var.cluster_name
+  resource_group_id = (var.cluster_resource_group_id == "") ? module.resource_group.resource_group_id : var.cluster_resource_group_id
+}

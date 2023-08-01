@@ -79,7 +79,7 @@ module "kp" {
   source            = "./keyprotect/keyprotect_instance"
   kp_name           = var.kp_name
   kp_location       = (var.kp_location == "") ? var.region : var.kp_location
-  resource_group_id = (var.kp_resource_group_id == "") ? module.resource_group.resource_group_id : var.kp_resource_group_id 
+  resource_group_id = (var.kp_resource_group_id == "") ? module.resource_group.resource_group_id : var.kp_resource_group_id
 }
 
 module "cd" {

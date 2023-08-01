@@ -4,7 +4,7 @@ variable "cluster_name" {
   default     = "mycluster-free"
 }
 
-variable "data_center"{
+variable "data_center" {
   type        = string
   description = "The name of the datacenter. To list options run the cli `ibmcloud ks zones --provider classic` command."
   default     = "ams03"

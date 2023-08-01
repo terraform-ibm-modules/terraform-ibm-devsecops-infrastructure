@@ -23,7 +23,7 @@ module "terraform_devsecops_infra" {
   source                   = "git::https://github.com/terraform-ibm-modules/terraform-ibm-devsecops-infrastructure?ref=v1.0.0-beta.1"
   region                   = "us-south"
   resource_group           = "my-resource-group" #creates the resource group
-  #or 
+  #or
   #existing_resource_group = "Default"
   registry_namespace       = "my-registry-namespace-xyz1"
   vpc_name                 = "my-vpc-cluster-name"

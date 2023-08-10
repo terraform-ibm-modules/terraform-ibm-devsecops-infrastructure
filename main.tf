@@ -18,6 +18,10 @@ locals {
   use_vpc = (
     (var.use_free_tier) ? false : var.create_cluster
   )
+
+  use_free_cluster = (
+    (var.use_free_tier) ? true : var.create_cluster
+  )
 }
 
 module "resource_group" {
@@ -70,6 +74,14 @@ module "sm" {
   resource_group_id = (var.sm_resource_group_id == "") ? module.resource_group.resource_group_id : var.sm_resource_group_id
 }
 
+module "kp" {
+  count             = (var.create_kp) ? 1 : 0
+  source            = "./keyprotect/keyprotect_instance"
+  kp_name           = var.kp_name
+  kp_location       = (var.kp_location == "") ? var.region : var.kp_location
+  resource_group_id = (var.kp_resource_group_id == "") ? module.resource_group.resource_group_id : var.kp_resource_group_id
+}
+
 module "cd" {
   count             = (var.create_cd_instance) ? 1 : 0
   source            = "./continuous_delivery"
@@ -81,7 +93,7 @@ module "cd" {
 
 module "vpc_cluster" {
   count             = (local.use_vpc) ? 1 : 0
-  source            = "./cluster"
+  source            = "./cluster/vpc"
   depends_on        = [module.resource_group]
   vpc_name          = var.vpc_name
   cluster_name      = var.cluster_name
@@ -89,5 +101,13 @@ module "vpc_cluster" {
   flavor            = var.flavor
   kube_version      = var.kube_version
   vpc_region        = (var.vpc_region == "") ? var.region : var.vpc_region
-  resource_group_id = (var.vpc_resource_group_id == "") ? module.resource_group.resource_group_id : var.vpc_resource_group_id
+  resource_group_id = (var.cluster_resource_group_id == "") ? module.resource_group.resource_group_id : var.cluster_resource_group_id
+}
+
+module "container_cluster" {
+  count             = (local.use_free_cluster) ? 1 : 0
+  source            = "./cluster/container_cluster"
+  depends_on        = [module.resource_group]
+  cluster_name      = var.cluster_name
+  resource_group_id = (var.cluster_resource_group_id == "") ? module.resource_group.resource_group_id : var.cluster_resource_group_id
 }

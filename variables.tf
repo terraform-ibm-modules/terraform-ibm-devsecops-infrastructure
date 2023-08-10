@@ -42,9 +42,9 @@ variable "cluster_name" {
   default     = "iks-cluster-name"
 }
 
-variable "vpc_resource_group_id" {
+variable "cluster_resource_group_id" {
   type        = string
-  description = "The ID of the VPC resource group."
+  description = "The ID of the cluster resource group."
   default     = ""
 }
 
@@ -237,6 +237,31 @@ variable "sm_resource_group_id" {
   default     = ""
 }
 
+######KEY PROTECT ###########################
+
+variable "create_kp" {
+  type        = bool
+  description = "Set to `true` to create Key Protect instance."
+  default     = true
+}
+
+variable "kp_name" {
+  type        = string
+  description = "The name of the Key Protect instance. "
+  default     = ""
+}
+
+variable "kp_location" {
+  type        = string
+  description = "The region location of the Key Protect instance. "
+  default     = ""
+}
+
+variable "kp_resource_group_id" {
+  type        = string
+  description = "The ID of the resource group."
+  default     = ""
+}
 
 ################################
 

@@ -20,8 +20,8 @@ variable "flavor" {
 
 variable "kube_version" {
   type        = string
-  description = "The version of Kubernetes."
-  default     = "1.25.11"
+  description = "The version of Kubernetes to use. Uses the latest version if not set."
+  default     = ""
 }
 
 variable "vpc_name" {
@@ -46,6 +46,12 @@ variable "cluster_resource_group_id" {
   type        = string
   description = "The ID of the cluster resource group."
   default     = ""
+}
+
+variable "wait_till" {
+  type        = string
+  description = "A status state check for the VPC cluster creation. Terraform will acknowledge a successful run based on the `wait_till` status value. To wait for full creation status including workers and ingress. Set the value to `IngressReady`. Other values include `Normal` and `MasterNodeReady`."
+  default     = "OneWorkerNodeReady"
 }
 
 ######### CONTINUOUS DELIVERY SERVICE #############

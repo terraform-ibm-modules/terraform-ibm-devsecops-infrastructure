@@ -18,10 +18,6 @@ locals {
   use_vpc = (
     (var.use_free_tier) ? false : var.create_cluster
   )
-
-  use_free_cluster = (
-    (var.use_free_tier) ? true : var.create_cluster
-  )
 }
 
 module "resource_group" {
@@ -99,15 +95,8 @@ module "vpc_cluster" {
   cluster_name      = var.cluster_name
   worker_count      = var.worker_count
   flavor            = var.flavor
+  wait_till         = var.wait_till
   kube_version      = var.kube_version
   vpc_region        = (var.vpc_region == "") ? var.region : var.vpc_region
-  resource_group_id = (var.cluster_resource_group_id == "") ? module.resource_group.resource_group_id : var.cluster_resource_group_id
-}
-
-module "container_cluster" {
-  count             = (local.use_free_cluster) ? 1 : 0
-  source            = "./cluster/container_cluster"
-  depends_on        = [module.resource_group]
-  cluster_name      = var.cluster_name
   resource_group_id = (var.cluster_resource_group_id == "") ? module.resource_group.resource_group_id : var.cluster_resource_group_id
 }

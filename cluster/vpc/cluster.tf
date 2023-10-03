@@ -17,9 +17,24 @@ resource "ibm_is_subnet" "subnet1" {
 }
 
 resource "ibm_container_vpc_cluster" "cluster" {
+  count             = (var.kube_version == "") ? 0 : 1
   name              = var.cluster_name
   vpc_id            = ibm_is_vpc.vpc1.id
   kube_version      = var.kube_version
+  flavor            = var.flavor
+  worker_count      = var.worker_count
+  resource_group_id = var.resource_group_id
+
+  zones {
+    subnet_id = ibm_is_subnet.subnet1.id
+    name      = local.ZONE1
+  }
+}
+
+resource "ibm_container_vpc_cluster" "cluster_default_kube" {
+  count             = (var.kube_version == "") ? 1 : 0
+  name              = var.cluster_name
+  vpc_id            = ibm_is_vpc.vpc1.id
   flavor            = var.flavor
   worker_count      = var.worker_count
   resource_group_id = var.resource_group_id
@@ -39,5 +54,5 @@ resource "ibm_is_public_gateway" "public_gateway" {
 }
 
 data "ibm_container_cluster_config" "cluster_config" {
-  cluster_name_id = ibm_container_vpc_cluster.cluster.id
+  cluster_name_id = ibm_container_vpc_cluster.cluster[0].id
 }

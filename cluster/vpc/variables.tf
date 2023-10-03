@@ -7,7 +7,6 @@ variable "flavor" {
 }
 
 variable "kube_version" {
-  default = "1.25.11"
 }
 
 variable "vpc_region" {}
@@ -20,4 +19,7 @@ variable "resource_group_id" {}
 
 variable "createPublicGateway" {
   default = false
+}
+
+variable "wait_till" {
 }

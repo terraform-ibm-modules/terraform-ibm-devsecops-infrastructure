@@ -13,6 +13,9 @@ variable "data_center" {
 variable "resource_group_id" {
 }
 
+variable "wait_till" {
+}
+
 variable "machine_type" {
   type        = string
   description = "The cluster machine type."

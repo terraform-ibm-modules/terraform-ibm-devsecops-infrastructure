@@ -22,6 +22,7 @@ resource "ibm_container_vpc_cluster" "cluster" {
   vpc_id            = ibm_is_vpc.vpc1.id
   kube_version      = var.kube_version
   flavor            = var.flavor
+  wait_till         = var.wait_till
   worker_count      = var.worker_count
   resource_group_id = var.resource_group_id
 
@@ -36,6 +37,7 @@ resource "ibm_container_vpc_cluster" "cluster_default_kube" {
   name              = var.cluster_name
   vpc_id            = ibm_is_vpc.vpc1.id
   flavor            = var.flavor
+  wait_till         = var.wait_till
   worker_count      = var.worker_count
   resource_group_id = var.resource_group_id
 

@@ -207,9 +207,10 @@ variable "resource_group" {
 
 ############## SECRETS MANAGER ############################
 ############## SM Instance ########################
-variable "create_sm" {
+
+variable "create_secrets" {
   type        = bool
-  description = "Set to `true` to create Secrets Manager instance."
+  description = "Set to `true` to create `ibmcloud-sapi-key`, `cos-api-key` and `signing_key`."
   default     = true
 }
 
@@ -237,10 +238,83 @@ variable "sm_location" {
   default     = ""
 }
 
+variable "sm_secret_group_id" {
+  type        = string
+  description = "The Secret Group ID."
+  default     = ""
+}
+
 variable "sm_resource_group_id" {
   type        = string
   description = "The ID of the resource group."
   default     = ""
+}
+
+variable "sm_instance_id" {
+  type        = string
+  description = "The instance ID of the Secrets Manager."
+  default     = ""
+}
+
+variable "sm_secret_group" {
+  type        = string
+  description = "The name of the Secrets Group that is created."
+  default     = ""
+}
+
+########### SECRET MANAGER SECRETS ###########################
+
+variable "cos_api_key_secret" {
+  type        = string
+  description = "apikey"
+  sensitive   = true
+  default     = "Place Holder"
+}
+
+variable "cos_api_key_secret_name" {
+  type        = string
+  description = "The name of the secret as it appears in Secret Manager."
+  default     = "cos-api-key"
+}
+
+variable "iam_api_key_secret" {
+  type        = string
+  description = "apikey"
+  sensitive   = true
+  default     = "Place Holder"
+}
+
+variable "iam_api_key_secret_name" {
+  type        = string
+  description = "The name of the secret as it appears in Secret Manager."
+  default     = "ibmcloud-api-key"
+}
+
+variable "signing_certificate_secret" {
+  type        = string
+  description = "apikey"
+  sensitive   = true
+  default     = "Place Holder"
+}
+
+variable "signing_certifcate_secret_name" {
+  type        = string
+  description = "The name of the secret as it appears in Secret Manager."
+  default     = "signing-certificate"
+}
+
+
+variable "signing_key_secret" {
+  type        = string
+  description = "apikey"
+  sensitive   = true
+  default     = "Place Holder"
+}
+
+variable "signing_key_secret_name" {
+  type        = string
+  description = "The name of the secret as it appears in Secret Manager."
+  default     = "signing_key"
 }
 
 ######KEY PROTECT ###########################

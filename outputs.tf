@@ -54,6 +54,21 @@ output "secrets_manager_instance_id" {
   description = "The instance Id of the Secrets Manager instance."
 }
 
+output "secrets_manager_name" {
+  value       = var.sm_name
+  description = "The Secrets Manager name."
+}
+
+output "secrets_manager_location" {
+  value       = var.sm_location
+  description = "The region containing the Secrets Manager instance."
+}
+
+output "secrets_manager_secrets_group" {
+  value       = var.sm_secret_group
+  description = "The secret group containing the `ibmcloud-api-key` for running the pipelines."
+}
+
 output "keyprotect_instance_id" {
   value       = try(module.kp[0].instance_id, "")
   description = "The instance Id of the Key Protect instance."

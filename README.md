@@ -48,14 +48,14 @@ statement instead the previous block.
 
 <!-- END EXAMPLES HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Requirements
+### Requirements
 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
-| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >=1.52.1 |
+| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 1.60.0 |
 
-## Modules
+### Modules
 
 | Name | Source | Version |
 |------|--------|---------|
@@ -63,15 +63,21 @@ statement instead the previous block.
 | <a name="module_cos"></a> [cos](#module\_cos) | ./cos/cos_instance | n/a |
 | <a name="module_cos_bucket"></a> [cos\_bucket](#module\_cos\_bucket) | ./cos/cos_bucket | n/a |
 | <a name="module_icr"></a> [icr](#module\_icr) | ./icr | n/a |
+| <a name="module_kp"></a> [kp](#module\_kp) | ./keyprotect/keyprotect_instance | n/a |
 | <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | ./resource_group | n/a |
 | <a name="module_sm"></a> [sm](#module\_sm) | ./secrets_manager/secrets_manager_instance | n/a |
-| <a name="module_vpc_cluster"></a> [vpc\_cluster](#module\_vpc\_cluster) | ./cluster | n/a |
+| <a name="module_sm_arbitrary_secret_cos_apikey"></a> [sm\_arbitrary\_secret\_cos\_apikey](#module\_sm\_arbitrary\_secret\_cos\_apikey) | ./secrets_manager/arbitrary_secret | n/a |
+| <a name="module_sm_arbitrary_secret_ibmcloud_api_key"></a> [sm\_arbitrary\_secret\_ibmcloud\_api\_key](#module\_sm\_arbitrary\_secret\_ibmcloud\_api\_key) | ./secrets_manager/arbitrary_secret | n/a |
+| <a name="module_sm_arbitrary_secret_signing_certifcate"></a> [sm\_arbitrary\_secret\_signing\_certifcate](#module\_sm\_arbitrary\_secret\_signing\_certifcate) | ./secrets_manager/arbitrary_secret | n/a |
+| <a name="module_sm_arbitrary_secret_signing_key"></a> [sm\_arbitrary\_secret\_signing\_key](#module\_sm\_arbitrary\_secret\_signing\_key) | ./secrets_manager/arbitrary_secret | n/a |
+| <a name="module_sm_secret_group"></a> [sm\_secret\_group](#module\_sm\_secret\_group) | ./secrets_manager/secret_group | n/a |
+| <a name="module_vpc_cluster"></a> [vpc\_cluster](#module\_vpc\_cluster) | ./cluster/vpc | n/a |
 
-## Resources
+### Resources
 
 No resources.
 
-## Inputs
+### Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
@@ -80,6 +86,9 @@ No resources.
 | <a name="input_cd_resource_group_id"></a> [cd\_resource\_group\_id](#input\_cd\_resource\_group\_id) | The resource group ID containing the CD instance. | `string` | `""` | no |
 | <a name="input_cd_service_plan"></a> [cd\_service\_plan](#input\_cd\_service\_plan) | The type of the plan `lite` or `professional`. | `string` | `""` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the Kubernetes cluster where the application is deployed. This sets the same cluster for both CI and CD toolchains. See `ci_cluster_name` and `cd_cluster_name` to set different clusters. By default , the cluster namespace for CI will be set to `dev` and CD to `prod`. These can be changed using `ci_cluster_namespace` and `cd_cluster_namespace`. | `string` | `"iks-cluster-name"` | no |
+| <a name="input_cluster_resource_group_id"></a> [cluster\_resource\_group\_id](#input\_cluster\_resource\_group\_id) | The ID of the cluster resource group. | `string` | `""` | no |
+| <a name="input_cos_api_key_secret"></a> [cos\_api\_key\_secret](#input\_cos\_api\_key\_secret) | apikey | `string` | `"Place Holder"` | no |
+| <a name="input_cos_api_key_secret_name"></a> [cos\_api\_key\_secret\_name](#input\_cos\_api\_key\_secret\_name) | The name of the secret as it appears in Secret Manager. | `string` | `"cos-api-key"` | no |
 | <a name="input_cos_bucket_name"></a> [cos\_bucket\_name](#input\_cos\_bucket\_name) | Set the name of your COS bucket. | `string` | `""` | no |
 | <a name="input_cos_bucket_region"></a> [cos\_bucket\_region](#input\_cos\_bucket\_region) | The COS region. | `string` | `""` | no |
 | <a name="input_cos_default_retention"></a> [cos\_default\_retention](#input\_cos\_default\_retention) | The default retention period are defined by this policy and apply to all objects in the bucket. | `string` | `"365"` | no |
@@ -96,28 +105,41 @@ No resources.
 | <a name="input_create_cos"></a> [create\_cos](#input\_create\_cos) | Set to `true` to create COS. | `bool` | `true` | no |
 | <a name="input_create_cos_bucket"></a> [create\_cos\_bucket](#input\_create\_cos\_bucket) | Set to `true` to create a COS bucket. | `bool` | `true` | no |
 | <a name="input_create_icr"></a> [create\_icr](#input\_create\_icr) | Set to `true` to create ICR namespace | `bool` | `true` | no |
-| <a name="input_create_sm"></a> [create\_sm](#input\_create\_sm) | Set to `true` to create Secrets Manager instance. | `bool` | `true` | no |
+| <a name="input_create_kp"></a> [create\_kp](#input\_create\_kp) | Set to `true` to create Key Protect instance. | `bool` | `true` | no |
+| <a name="input_create_secrets"></a> [create\_secrets](#input\_create\_secrets) | Set to `true` to create `ibmcloud-sapi-key`, `cos-api-key` and `signing_key`. | `bool` | `true` | no |
 | <a name="input_existing_resource_group"></a> [existing\_resource\_group](#input\_existing\_resource\_group) | The name of an existing resource group to use. This supercedes the creation of a named resource group. See `resource_group` input. | `string` | `""` | no |
 | <a name="input_flavor"></a> [flavor](#input\_flavor) | The cluster specs. | `string` | `"bx2.2x8"` | no |
+| <a name="input_iam_api_key_secret"></a> [iam\_api\_key\_secret](#input\_iam\_api\_key\_secret) | apikey | `string` | `"Place Holder"` | no |
+| <a name="input_iam_api_key_secret_name"></a> [iam\_api\_key\_secret\_name](#input\_iam\_api\_key\_secret\_name) | The name of the secret as it appears in Secret Manager. | `string` | `"ibmcloud-api-key"` | no |
 | <a name="input_ibmcloud_api_key"></a> [ibmcloud\_api\_key](#input\_ibmcloud\_api\_key) | API key belonging to the account in which all the resources are created. | `string` | n/a | yes |
 | <a name="input_icr_resource_group_id"></a> [icr\_resource\_group\_id](#input\_icr\_resource\_group\_id) | The resource group Id containing the registry region namespace. | `string` | `""` | no |
 | <a name="input_is_permanant"></a> [is\_permanant](#input\_is\_permanant) | Specifies a permanent retention status either enable or disable for a bucket. | `bool` | `false` | no |
-| <a name="input_kube_version"></a> [kube\_version](#input\_kube\_version) | The version of Kubernetes. | `string` | `"1.25.11"` | no |
+| <a name="input_kp_location"></a> [kp\_location](#input\_kp\_location) | The region location of the Key Protect instance. | `string` | `""` | no |
+| <a name="input_kp_name"></a> [kp\_name](#input\_kp\_name) | The name of the Key Protect instance. | `string` | `""` | no |
+| <a name="input_kp_resource_group_id"></a> [kp\_resource\_group\_id](#input\_kp\_resource\_group\_id) | The ID of the resource group. | `string` | `""` | no |
+| <a name="input_kube_version"></a> [kube\_version](#input\_kube\_version) | The version of Kubernetes to use. Uses the latest version if not set. | `string` | `""` | no |
 | <a name="input_region"></a> [region](#input\_region) | The region used for all resource creation unless a resource specific region is used. | `string` | `"us-south"` | no |
 | <a name="input_registry_namespace"></a> [registry\_namespace](#input\_registry\_namespace) | A unique namespace within the IBM Cloud Container Registry region where the application image is stored. | `string` | `"my-registry-namespace"` | no |
 | <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | The resource group that will be created and used, by default, for all resource creation and service instance lookups. | `string` | `""` | no |
+| <a name="input_signing_certifcate_secret_name"></a> [signing\_certifcate\_secret\_name](#input\_signing\_certifcate\_secret\_name) | The name of the secret as it appears in Secret Manager. | `string` | `"signing-certificate"` | no |
+| <a name="input_signing_certificate_secret"></a> [signing\_certificate\_secret](#input\_signing\_certificate\_secret) | apikey | `string` | `"Place Holder"` | no |
+| <a name="input_signing_key_secret"></a> [signing\_key\_secret](#input\_signing\_key\_secret) | apikey | `string` | `"Place Holder"` | no |
+| <a name="input_signing_key_secret_name"></a> [signing\_key\_secret\_name](#input\_signing\_key\_secret\_name) | The name of the secret as it appears in Secret Manager. | `string` | `"signing_key"` | no |
+| <a name="input_sm_instance_id"></a> [sm\_instance\_id](#input\_sm\_instance\_id) | The instance ID of the Secrets Manager. | `string` | `""` | no |
 | <a name="input_sm_location"></a> [sm\_location](#input\_sm\_location) | The region location of the Secrets Manager instance. | `string` | `""` | no |
 | <a name="input_sm_name"></a> [sm\_name](#input\_sm\_name) | The name of the Secrets Manager instance. | `string` | `""` | no |
 | <a name="input_sm_resource_group_id"></a> [sm\_resource\_group\_id](#input\_sm\_resource\_group\_id) | The ID of the resource group. | `string` | `""` | no |
+| <a name="input_sm_secret_group"></a> [sm\_secret\_group](#input\_sm\_secret\_group) | The name of the Secrets Group that is created. | `string` | `""` | no |
+| <a name="input_sm_secret_group_id"></a> [sm\_secret\_group\_id](#input\_sm\_secret\_group\_id) | The Secret Group ID. | `string` | `""` | no |
 | <a name="input_sm_service_endpoints"></a> [sm\_service\_endpoints](#input\_sm\_service\_endpoints) | The types of service endpoints supported by Secrets Manager. Can be `public`, `private` or `public-and-private`. | `string` | `"public-and-private"` | no |
 | <a name="input_sm_service_plan"></a> [sm\_service\_plan](#input\_sm\_service\_plan) | The Secrets Manager service plan. `standard` or `trial`. | `string` | `""` | no |
 | <a name="input_use_free_tier"></a> [use\_free\_tier](#input\_use\_free\_tier) | Set to `true` to use free tier. VPC cluster is not suported in a free tier. | `bool` | `false` | no |
 | <a name="input_vpc_name"></a> [vpc\_name](#input\_vpc\_name) | Name of the VPC. | `string` | `"vpc-name"` | no |
 | <a name="input_vpc_region"></a> [vpc\_region](#input\_vpc\_region) | The VPC region. | `string` | `"us-south"` | no |
-| <a name="input_vpc_resource_group_id"></a> [vpc\_resource\_group\_id](#input\_vpc\_resource\_group\_id) | The ID of the VPC resource group. | `string` | `""` | no |
+| <a name="input_wait_till"></a> [wait\_till](#input\_wait\_till) | A status state check for the VPC cluster creation. Terraform will acknowledge a successful run based on the `wait_till` status value. To wait for full creation status including workers and ingress. Set the value to `IngressReady`. Other values include `Normal` and `MasterNodeReady`. | `string` | `"OneWorkerNodeReady"` | no |
 | <a name="input_worker_count"></a> [worker\_count](#input\_worker\_count) | The number of worker nodes per zone in the default worker pool. | `number` | `1` | no |
 
-## Outputs
+### Outputs
 
 | Name | Description |
 |------|-------------|
@@ -128,9 +150,13 @@ No resources.
 | <a name="output_cos_s3_endpoint_private"></a> [cos\_s3\_endpoint\_private](#output\_cos\_s3\_endpoint\_private) | The COS bucket private endpoint. |
 | <a name="output_cos_s3_endpoint_public"></a> [cos\_s3\_endpoint\_public](#output\_cos\_s3\_endpoint\_public) | The COS bucket public endpoint. |
 | <a name="output_icr_namespace"></a> [icr\_namespace](#output\_icr\_namespace) | The ICR namespace. |
+| <a name="output_keyprotect_instance_id"></a> [keyprotect\_instance\_id](#output\_keyprotect\_instance\_id) | The instance Id of the Key Protect instance. |
 | <a name="output_resource_group_id"></a> [resource\_group\_id](#output\_resource\_group\_id) | The Id of the resource group. |
 | <a name="output_resource_group_name"></a> [resource\_group\_name](#output\_resource\_group\_name) | The name of the resource group. |
 | <a name="output_secrets_manager_instance_id"></a> [secrets\_manager\_instance\_id](#output\_secrets\_manager\_instance\_id) | The instance Id of the Secrets Manager instance. |
+| <a name="output_secrets_manager_location"></a> [secrets\_manager\_location](#output\_secrets\_manager\_location) | The region containing the Secrets Manager instance. |
+| <a name="output_secrets_manager_name"></a> [secrets\_manager\_name](#output\_secrets\_manager\_name) | The Secrets Manager name. |
+| <a name="output_secrets_manager_secrets_group"></a> [secrets\_manager\_secrets\_group](#output\_secrets\_manager\_secrets\_group) | The secret group containing the `ibmcloud-api-key` for running the pipelines. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- BEGIN CONTRIBUTING HOOK -->
 

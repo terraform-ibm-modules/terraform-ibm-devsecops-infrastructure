@@ -1,6 +1,7 @@
 
 
 resource "ibm_resource_instance" "secrets_manager_instance" {
+  count             = (var.sm_instance_id == "") ? 1 : 0
   name              = var.sm_name
   service           = "secrets-manager"
   service_endpoints = var.service_endpoints

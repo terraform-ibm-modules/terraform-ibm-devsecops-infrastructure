@@ -60,14 +60,15 @@ module "cos_bucket" {
 }
 
 module "sm" {
-  source            = "./secrets_manager/secrets_manager_instance"
-  depends_on        = [module.resource_group]
-  sm_name           = var.sm_name
-  service_endpoints = var.sm_service_endpoints
-  service_plan      = local.sm_tier
-  sm_location       = (var.sm_location == "") ? var.region : var.sm_location
-  resource_group_id = (var.sm_resource_group_id == "") ? module.resource_group.resource_group_id : var.sm_resource_group_id
-  sm_instance_id    = var.sm_instance_id
+  source              = "./secrets_manager/secrets_manager_instance"
+  depends_on          = [module.resource_group]
+  sm_name             = var.sm_name
+  service_endpoints   = var.sm_service_endpoints
+  service_plan        = local.sm_tier
+  sm_location         = (var.sm_location == "") ? var.region : var.sm_location
+  resource_group_id   = (var.sm_resource_group_id == "") ? module.resource_group.resource_group_id : var.sm_resource_group_id
+  sm_instance_id      = var.sm_instance_id
+  resource_group_name = var.sm_resource_group_name
 }
 
 #resource "ibm_iam_api_key" "iam_api_key" {

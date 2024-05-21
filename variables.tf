@@ -250,6 +250,12 @@ variable "sm_resource_group_id" {
   default     = ""
 }
 
+variable "sm_resource_group_name" {
+  type        = string
+  description = "The name of the resource group."
+  default     = ""
+}
+
 variable "sm_instance_id" {
   type        = string
   description = "The instance ID of the Secrets Manager."

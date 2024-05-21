@@ -9,3 +9,7 @@ output "sm_name" {
 output "sm_location" {
   value = var.sm_location
 }
+
+output "sm_resource_group_name" {
+  value = try(data.ibm_resource_group.resource_group[0].name, "")
+}

@@ -129,6 +129,7 @@ No resources.
 | <a name="input_sm_location"></a> [sm\_location](#input\_sm\_location) | The region location of the Secrets Manager instance. | `string` | `""` | no |
 | <a name="input_sm_name"></a> [sm\_name](#input\_sm\_name) | The name of the Secrets Manager instance. | `string` | `""` | no |
 | <a name="input_sm_resource_group_id"></a> [sm\_resource\_group\_id](#input\_sm\_resource\_group\_id) | The ID of the resource group. | `string` | `""` | no |
+| <a name="input_sm_resource_group_name"></a> [sm\_resource\_group\_name](#input\_sm\_resource\_group\_name) | The name of the resource group. | `string` | `""` | no |
 | <a name="input_sm_secret_group"></a> [sm\_secret\_group](#input\_sm\_secret\_group) | The name of the Secrets Group that is created. | `string` | `""` | no |
 | <a name="input_sm_secret_group_id"></a> [sm\_secret\_group\_id](#input\_sm\_secret\_group\_id) | The Secret Group ID. | `string` | `""` | no |
 | <a name="input_sm_service_endpoints"></a> [sm\_service\_endpoints](#input\_sm\_service\_endpoints) | The types of service endpoints supported by Secrets Manager. Can be `public`, `private` or `public-and-private`. | `string` | `"public-and-private"` | no |
@@ -156,6 +157,7 @@ No resources.
 | <a name="output_secrets_manager_instance_id"></a> [secrets\_manager\_instance\_id](#output\_secrets\_manager\_instance\_id) | The instance Id of the Secrets Manager instance. |
 | <a name="output_secrets_manager_location"></a> [secrets\_manager\_location](#output\_secrets\_manager\_location) | The region containing the Secrets Manager instance. |
 | <a name="output_secrets_manager_name"></a> [secrets\_manager\_name](#output\_secrets\_manager\_name) | The Secrets Manager name. |
+| <a name="output_secrets_manager_resource_group_name"></a> [secrets\_manager\_resource\_group\_name](#output\_secrets\_manager\_resource\_group\_name) | The name of the resource group containing the Secrets Manager instance. |
 | <a name="output_secrets_manager_secrets_group"></a> [secrets\_manager\_secrets\_group](#output\_secrets\_manager\_secrets\_group) | The secret group containing the `ibmcloud-api-key` for running the pipelines. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- BEGIN CONTRIBUTING HOOK -->

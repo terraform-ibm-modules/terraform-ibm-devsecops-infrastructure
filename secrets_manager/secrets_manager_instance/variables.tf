@@ -13,5 +13,8 @@ variable "sm_location" {
 variable "resource_group_id" {
 }
 
+variable "resource_group_name" {
+}
+
 variable "sm_instance_id" {
 }

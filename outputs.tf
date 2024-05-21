@@ -50,7 +50,7 @@ output "resource_group_id" {
 }
 
 output "secrets_manager_instance_id" {
-  value       = try(module.sm[0].instance_id, "")
+  value       = try(module.sm.instance_id, "")
   description = "The instance Id of the Secrets Manager instance."
 }
 
@@ -60,8 +60,13 @@ output "secrets_manager_name" {
 }
 
 output "secrets_manager_location" {
-  value       = var.sm_location
+  value       = try(module.sm.sm_location, "")
   description = "The region containing the Secrets Manager instance."
+}
+
+output "secrets_manager_resource_group_name" {
+  value       = (module.sm.sm_resource_group_name == "") ? module.resource_group.resource_group_name : module.sm.sm_resource_group_name
+  description = "The name of the resource group containing the Secrets Manager instance."
 }
 
 output "secrets_manager_secrets_group" {

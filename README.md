@@ -106,7 +106,8 @@ No resources.
 | <a name="input_create_cos_bucket"></a> [create\_cos\_bucket](#input\_create\_cos\_bucket) | Set to `true` to create a COS bucket. | `bool` | `true` | no |
 | <a name="input_create_icr"></a> [create\_icr](#input\_create\_icr) | Set to `true` to create ICR namespace | `bool` | `true` | no |
 | <a name="input_create_kp"></a> [create\_kp](#input\_create\_kp) | Set to `true` to create Key Protect instance. | `bool` | `true` | no |
-| <a name="input_create_secrets"></a> [create\_secrets](#input\_create\_secrets) | Set to `true` to create `ibmcloud-sapi-key`, `cos-api-key` and `signing_key`. | `bool` | `true` | no |
+| <a name="input_create_or_link_to_secrets_manager"></a> [create\_or\_link\_to\_secrets\_manager](#input\_create\_or\_link\_to\_secrets\_manager) | Set to `true` to setup Secrets Manager. If `sm_instance_id` instance is set then that Secrets Manager will be used. Otherwise a new Secrets Manager instance will be provisioned. | `bool` | `true` | no |
+| <a name="input_create_secrets"></a> [create\_secrets](#input\_create\_secrets) | Set to `true` to create `ibmcloud-api-key`, `cos-api-key` and `signing_key`. | `bool` | `true` | no |
 | <a name="input_existing_resource_group"></a> [existing\_resource\_group](#input\_existing\_resource\_group) | The name of an existing resource group to use. This supercedes the creation of a named resource group. See `resource_group` input. | `string` | `""` | no |
 | <a name="input_flavor"></a> [flavor](#input\_flavor) | The cluster specs. | `string` | `"bx2.2x8"` | no |
 | <a name="input_iam_api_key_secret"></a> [iam\_api\_key\_secret](#input\_iam\_api\_key\_secret) | apikey | `string` | `"Place Holder"` | no |
@@ -125,13 +126,13 @@ No resources.
 | <a name="input_signing_certificate_secret"></a> [signing\_certificate\_secret](#input\_signing\_certificate\_secret) | apikey | `string` | `"Place Holder"` | no |
 | <a name="input_signing_key_secret"></a> [signing\_key\_secret](#input\_signing\_key\_secret) | apikey | `string` | `"Place Holder"` | no |
 | <a name="input_signing_key_secret_name"></a> [signing\_key\_secret\_name](#input\_signing\_key\_secret\_name) | The name of the secret as it appears in Secret Manager. | `string` | `"signing_key"` | no |
+| <a name="input_sm_existing_secret_group_id"></a> [sm\_existing\_secret\_group\_id](#input\_sm\_existing\_secret\_group\_id) | The Secret Group ID of an exiting secret group in a Secrets Manager instance. This will take precendence over `sm_secret_group_name`. | `string` | `""` | no |
 | <a name="input_sm_instance_id"></a> [sm\_instance\_id](#input\_sm\_instance\_id) | The instance ID of the Secrets Manager. | `string` | `""` | no |
 | <a name="input_sm_location"></a> [sm\_location](#input\_sm\_location) | The region location of the Secrets Manager instance. | `string` | `""` | no |
 | <a name="input_sm_name"></a> [sm\_name](#input\_sm\_name) | The name of the Secrets Manager instance. | `string` | `""` | no |
 | <a name="input_sm_resource_group_id"></a> [sm\_resource\_group\_id](#input\_sm\_resource\_group\_id) | The ID of the resource group. | `string` | `""` | no |
 | <a name="input_sm_resource_group_name"></a> [sm\_resource\_group\_name](#input\_sm\_resource\_group\_name) | The name of the resource group. | `string` | `""` | no |
-| <a name="input_sm_secret_group"></a> [sm\_secret\_group](#input\_sm\_secret\_group) | The name of the Secrets Group that is created. | `string` | `""` | no |
-| <a name="input_sm_secret_group_id"></a> [sm\_secret\_group\_id](#input\_sm\_secret\_group\_id) | The Secret Group ID. | `string` | `""` | no |
+| <a name="input_sm_secret_group_name"></a> [sm\_secret\_group\_name](#input\_sm\_secret\_group\_name) | The name of the Secrets Group that is created. | `string` | `"devsecops"` | no |
 | <a name="input_sm_service_endpoints"></a> [sm\_service\_endpoints](#input\_sm\_service\_endpoints) | The types of service endpoints supported by Secrets Manager. Can be `public`, `private` or `public-and-private`. | `string` | `"public-and-private"` | no |
 | <a name="input_sm_service_plan"></a> [sm\_service\_plan](#input\_sm\_service\_plan) | The Secrets Manager service plan. `standard` or `trial`. | `string` | `""` | no |
 | <a name="input_use_free_tier"></a> [use\_free\_tier](#input\_use\_free\_tier) | Set to `true` to use free tier. VPC cluster is not suported in a free tier. | `bool` | `false` | no |

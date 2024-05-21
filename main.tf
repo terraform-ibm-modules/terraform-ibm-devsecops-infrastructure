@@ -60,6 +60,7 @@ module "cos_bucket" {
 }
 
 module "sm" {
+  count               = (var.create_or_link_to_secrets_manager) ? 1 : 0
   source              = "./secrets_manager/secrets_manager_instance"
   depends_on          = [module.resource_group]
   sm_name             = var.sm_name
@@ -76,57 +77,58 @@ module "sm" {
 #}
 
 module "sm_secret_group" {
-  source             = "./secrets_manager/secret_group"
-  depends_on         = [module.sm]
-  sm_instance_id     = module.sm.instance_id
-  sm_location        = module.sm.sm_location
-  sm_secret_group    = var.sm_secret_group
-  sm_secret_group_id = var.sm_secret_group_id
+  count                       = ((var.create_secrets == true) && (var.create_or_link_to_secrets_manager == true)) ? 1 : 0
+  source                      = "./secrets_manager/secret_group"
+  depends_on                  = [module.sm]
+  sm_instance_id              = module.sm[0].instance_id
+  sm_location                 = module.sm[0].sm_location
+  sm_secret_group_name        = var.sm_secret_group_name
+  sm_existing_secret_group_id = var.sm_existing_secret_group_id
 }
 
 module "sm_arbitrary_secret_ibmcloud_api_key" {
-  count                   = (var.create_secrets) ? 1 : 0
+  count                   = ((var.create_secrets == true) && (var.create_or_link_to_secrets_manager == true)) ? 1 : 0
   depends_on              = [module.sm_secret_group]
   source                  = "./secrets_manager/arbitrary_secret"
-  region                  = module.sm.sm_location
-  secrets_manager_guid    = module.sm.instance_id
-  secret_group_id         = module.sm_secret_group.secret_group_id
+  region                  = module.sm[0].sm_location
+  secrets_manager_guid    = module.sm[0].instance_id
+  secret_group_id         = module.sm_secret_group[0].secret_group_id
   secret_name             = var.iam_api_key_secret_name
   secret_description      = "The IBMCloud apikey for running the pipelines."
   secret_payload_password = var.iam_api_key_secret
 }
 
 module "sm_arbitrary_secret_cos_apikey" {
-  count                   = (var.create_secrets) ? 1 : 0
+  count                   = ((var.create_secrets == true) && (var.create_or_link_to_secrets_manager == true)) ? 1 : 0
   depends_on              = [module.sm_secret_group]
   source                  = "./secrets_manager/arbitrary_secret"
-  region                  = module.sm.sm_location
-  secrets_manager_guid    = module.sm.instance_id
-  secret_group_id         = module.sm_secret_group.secret_group_id
+  region                  = module.sm[0].sm_location
+  secrets_manager_guid    = module.sm[0].instance_id
+  secret_group_id         = module.sm_secret_group[0].secret_group_id
   secret_name             = var.cos_api_key_secret_name
   secret_description      = "The COS apikey for accessing the associated COS instance."
   secret_payload_password = var.cos_api_key_secret
 }
 
 module "sm_arbitrary_secret_signing_key" {
-  count                   = (var.create_secrets) ? 1 : 0
+  count                   = ((var.create_secrets == true) && (var.create_or_link_to_secrets_manager == true)) ? 1 : 0
   depends_on              = [module.sm_secret_group]
   source                  = "./secrets_manager/arbitrary_secret"
-  region                  = module.sm.sm_location
-  secrets_manager_guid    = module.sm.instance_id
-  secret_group_id         = module.sm_secret_group.secret_group_id
+  region                  = module.sm[0].sm_location
+  secrets_manager_guid    = module.sm[0].instance_id
+  secret_group_id         = module.sm_secret_group[0].secret_group_id
   secret_name             = var.signing_key_secret_name
   secret_description      = "The gpg signing key for signing images."
   secret_payload_password = var.signing_key_secret
 }
 
 module "sm_arbitrary_secret_signing_certifcate" {
-  count                   = (var.create_secrets) ? 1 : 0
+  count                   = ((var.create_secrets == true) && (var.create_or_link_to_secrets_manager == true)) ? 1 : 0
   depends_on              = [module.sm_secret_group]
   source                  = "./secrets_manager/arbitrary_secret"
-  region                  = module.sm.sm_location
-  secrets_manager_guid    = module.sm.instance_id
-  secret_group_id         = module.sm_secret_group.secret_group_id
+  region                  = module.sm[0].sm_location
+  secrets_manager_guid    = module.sm[0].instance_id
+  secret_group_id         = module.sm_secret_group[0].secret_group_id
   secret_name             = var.signing_certifcate_secret_name
   secret_description      = "The public component of the GPG signing key for validating image signatures."
   secret_payload_password = var.signing_certificate_secret

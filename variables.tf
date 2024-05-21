@@ -208,9 +208,15 @@ variable "resource_group" {
 ############## SECRETS MANAGER ############################
 ############## SM Instance ########################
 
+variable "create_or_link_to_secrets_manager" {
+  type        = bool
+  description = "Set to `true` to setup Secrets Manager. If `sm_instance_id` instance is set then that Secrets Manager will be used. Otherwise a new Secrets Manager instance will be provisioned."
+  default     = true
+}
+
 variable "create_secrets" {
   type        = bool
-  description = "Set to `true` to create `ibmcloud-sapi-key`, `cos-api-key` and `signing_key`."
+  description = "Set to `true` to create `ibmcloud-api-key`, `cos-api-key` and `signing_key`."
   default     = true
 }
 
@@ -238,9 +244,9 @@ variable "sm_location" {
   default     = ""
 }
 
-variable "sm_secret_group_id" {
+variable "sm_existing_secret_group_id" {
   type        = string
-  description = "The Secret Group ID."
+  description = "The Secret Group ID of an exiting secret group in a Secrets Manager instance. This will take precendence over `sm_secret_group_name`."
   default     = ""
 }
 
@@ -262,10 +268,10 @@ variable "sm_instance_id" {
   default     = ""
 }
 
-variable "sm_secret_group" {
+variable "sm_secret_group_name" {
   type        = string
   description = "The name of the Secrets Group that is created."
-  default     = ""
+  default     = "devsecops"
 }
 
 ########### SECRET MANAGER SECRETS ###########################

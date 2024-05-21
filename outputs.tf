@@ -3,6 +3,9 @@
 ##############################################################################
 
 #############################################################################
+locals {
+  sm_resource_group_name = try(module.sm[0].sm_resource_group_name, "")
+}
 
 output "cluster_name" {
   value       = try(module.vpc_cluster[0].cluster_name, "")
@@ -50,7 +53,7 @@ output "resource_group_id" {
 }
 
 output "secrets_manager_instance_id" {
-  value       = try(module.sm.instance_id, "")
+  value       = try(module.sm[0].instance_id, "")
   description = "The instance Id of the Secrets Manager instance."
 }
 
@@ -60,17 +63,17 @@ output "secrets_manager_name" {
 }
 
 output "secrets_manager_location" {
-  value       = try(module.sm.sm_location, "")
+  value       = try(module.sm[0].sm_location, "")
   description = "The region containing the Secrets Manager instance."
 }
 
 output "secrets_manager_resource_group_name" {
-  value       = (module.sm.sm_resource_group_name == "") ? module.resource_group.resource_group_name : module.sm.sm_resource_group_name
+  value       = (local.sm_resource_group_name == "") ? module.resource_group.resource_group_name : local.sm_resource_group_name
   description = "The name of the resource group containing the Secrets Manager instance."
 }
 
 output "secrets_manager_secrets_group" {
-  value       = var.sm_secret_group
+  value       = try(module.sm_secret_group[0].secret_group_name, "")
   description = "The secret group containing the `ibmcloud-api-key` for running the pipelines."
 }
 

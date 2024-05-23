@@ -99,6 +99,12 @@ variable "create_cos_bucket" {
   default     = true
 }
 
+variable "cos_add_random_cos_bucket_suffix" {
+  type        = bool
+  description = "Set to `true` to append a 4 character random string to the specified COS bucket name."
+  default     = true
+}
+
 variable "cos_instance_name" {
   type        = string
   description = "The name of the COS instance that contains the COS buckets."

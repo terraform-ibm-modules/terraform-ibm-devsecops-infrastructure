@@ -3,9 +3,16 @@ locals {
   use_lite = (var.service_plan == "lite") ? true : false
 }
 
+resource "random_string" "resource_suffix" {
+  count   = (var.add_cos_bucket_name_suffix) ? 1 : 0
+  length  = 4
+  special = false
+  upper   = false
+}
+
 resource "ibm_cos_bucket" "smart" {
   count                = (local.use_lite) ? 0 : 1
-  bucket_name          = var.bucket_name
+  bucket_name          = (var.add_cos_bucket_name_suffix) ? format("%s-%s", var.bucket_name, random_string.resource_suffix[0].result) : var.bucket_name
   resource_instance_id = var.cos_instance_id
   region_location      = var.bucket_region
   storage_class        = var.storage_class
@@ -21,7 +28,7 @@ resource "ibm_cos_bucket" "smart" {
 
 resource "ibm_cos_bucket" "smart_lite" {
   count                = (local.use_lite) ? 1 : 0
-  bucket_name          = var.bucket_name
+  bucket_name          = (var.add_cos_bucket_name_suffix) ? format("%s-%s", var.bucket_name, random_string.resource_suffix[0].result) : var.bucket_name
   resource_instance_id = var.cos_instance_id
   region_location      = var.bucket_region
   storage_class        = var.storage_class

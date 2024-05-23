@@ -25,9 +25,8 @@ variable "is_permanant" {
 variable "cos_instance_id" {
 }
 
-#bucket
-#resilency =  regional
-#location  = eu-de
-#storage class = smart
-#service credential = cloud-object-storage-cos-standard-9kz
-#role =writer
+variable "add_cos_bucket_name_suffix" {
+    type        = bool
+    description = "Set to `true` to appen a random 4 character string to the name of the value of the provided COS bucket name."
+    default     = false
+}

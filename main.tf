@@ -45,18 +45,19 @@ module "cos" {
 }
 
 module "cos_bucket" {
-  count             = (var.create_cos_bucket) ? 1 : 0
-  source            = "./cos/cos_bucket"
-  depends_on        = [module.cos]
-  service_plan      = local.cos_tier
-  storage_class     = var.cos_storage_class
-  bucket_region     = (var.cos_bucket_region == "") ? var.region : var.cos_bucket_region
-  bucket_name       = var.cos_bucket_name
-  cos_instance_id   = (var.cos_instance_id == "") ? module.cos[0].cos_instance_id : var.cos_instance_id
-  default_retention = var.cos_default_retention
-  minimum_retention = var.cos_minimum_retention
-  maximum_retention = var.cos_maximum_retention
-  is_permanant      = var.is_permanant
+  count                      = (var.create_cos_bucket) ? 1 : 0
+  source                     = "./cos/cos_bucket"
+  depends_on                 = [module.cos]
+  service_plan               = local.cos_tier
+  storage_class              = var.cos_storage_class
+  bucket_region              = (var.cos_bucket_region == "") ? var.region : var.cos_bucket_region
+  bucket_name                = var.cos_bucket_name
+  cos_instance_id            = (var.cos_instance_id == "") ? module.cos[0].cos_instance_id : var.cos_instance_id
+  default_retention          = var.cos_default_retention
+  minimum_retention          = var.cos_minimum_retention
+  maximum_retention          = var.cos_maximum_retention
+  is_permanant               = var.is_permanant
+  add_cos_bucket_name_suffix = var.cos_add_random_cos_bucket_suffix
 }
 
 module "sm" {

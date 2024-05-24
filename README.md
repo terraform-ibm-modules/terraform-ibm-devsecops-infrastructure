@@ -54,6 +54,8 @@ statement instead the previous block.
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
 | <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 1.60.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.5.1, < 4.0.0 |
+| <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.9.1 |
 
 ### Modules
 
@@ -64,9 +66,14 @@ statement instead the previous block.
 | <a name="module_cos_bucket"></a> [cos\_bucket](#module\_cos\_bucket) | ./cos/cos_bucket | n/a |
 | <a name="module_icr"></a> [icr](#module\_icr) | ./icr | n/a |
 | <a name="module_kp"></a> [kp](#module\_kp) | ./keyprotect/keyprotect_instance | n/a |
+| <a name="module_kp_secret_cos_api_key"></a> [kp\_secret\_cos\_api\_key](#module\_kp\_secret\_cos\_api\_key) | ./keyprotect/keyprotect_key | n/a |
+| <a name="module_kp_secret_iamcloud_api_key"></a> [kp\_secret\_iamcloud\_api\_key](#module\_kp\_secret\_iamcloud\_api\_key) | ./keyprotect/keyprotect_key | n/a |
+| <a name="module_kp_secret_signing_certifcate"></a> [kp\_secret\_signing\_certifcate](#module\_kp\_secret\_signing\_certifcate) | ./keyprotect/keyprotect_key | n/a |
+| <a name="module_kp_secret_signing_key"></a> [kp\_secret\_signing\_key](#module\_kp\_secret\_signing\_key) | ./keyprotect/keyprotect_key | n/a |
 | <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | ./resource_group | n/a |
+| <a name="module_signing_keys"></a> [signing\_keys](#module\_signing\_keys) | ./gpg-key | n/a |
 | <a name="module_sm"></a> [sm](#module\_sm) | ./secrets_manager/secrets_manager_instance | n/a |
-| <a name="module_sm_arbitrary_secret_cos_apikey"></a> [sm\_arbitrary\_secret\_cos\_apikey](#module\_sm\_arbitrary\_secret\_cos\_apikey) | ./secrets_manager/arbitrary_secret | n/a |
+| <a name="module_sm_arbitrary_secret_cos_api_key"></a> [sm\_arbitrary\_secret\_cos\_api\_key](#module\_sm\_arbitrary\_secret\_cos\_api\_key) | ./secrets_manager/arbitrary_secret | n/a |
 | <a name="module_sm_arbitrary_secret_ibmcloud_api_key"></a> [sm\_arbitrary\_secret\_ibmcloud\_api\_key](#module\_sm\_arbitrary\_secret\_ibmcloud\_api\_key) | ./secrets_manager/arbitrary_secret | n/a |
 | <a name="module_sm_arbitrary_secret_signing_certifcate"></a> [sm\_arbitrary\_secret\_signing\_certifcate](#module\_sm\_arbitrary\_secret\_signing\_certifcate) | ./secrets_manager/arbitrary_secret | n/a |
 | <a name="module_sm_arbitrary_secret_signing_key"></a> [sm\_arbitrary\_secret\_signing\_key](#module\_sm\_arbitrary\_secret\_signing\_key) | ./secrets_manager/arbitrary_secret | n/a |
@@ -75,7 +82,11 @@ statement instead the previous block.
 
 ### Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [ibm_iam_api_key.cos_iam_api_key](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/iam_api_key) | resource |
+| [ibm_iam_api_key.iam_api_key](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/iam_api_key) | resource |
+| [time_static.timestamp](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/static) | resource |
 
 ### Inputs
 
@@ -87,6 +98,7 @@ No resources.
 | <a name="input_cd_service_plan"></a> [cd\_service\_plan](#input\_cd\_service\_plan) | The type of the plan `lite` or `professional`. | `string` | `""` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the Kubernetes cluster where the application is deployed. This sets the same cluster for both CI and CD toolchains. See `ci_cluster_name` and `cd_cluster_name` to set different clusters. By default , the cluster namespace for CI will be set to `dev` and CD to `prod`. These can be changed using `ci_cluster_namespace` and `cd_cluster_namespace`. | `string` | `"iks-cluster-name"` | no |
 | <a name="input_cluster_resource_group_id"></a> [cluster\_resource\_group\_id](#input\_cluster\_resource\_group\_id) | The ID of the cluster resource group. | `string` | `""` | no |
+| <a name="input_cos_add_random_cos_bucket_suffix"></a> [cos\_add\_random\_cos\_bucket\_suffix](#input\_cos\_add\_random\_cos\_bucket\_suffix) | Set to `true` to append a 4 character random string to the specified COS bucket name. | `bool` | `true` | no |
 | <a name="input_cos_api_key_secret"></a> [cos\_api\_key\_secret](#input\_cos\_api\_key\_secret) | apikey | `string` | `"Place Holder"` | no |
 | <a name="input_cos_api_key_secret_name"></a> [cos\_api\_key\_secret\_name](#input\_cos\_api\_key\_secret\_name) | The name of the secret as it appears in Secret Manager. | `string` | `"cos-api-key"` | no |
 | <a name="input_cos_bucket_name"></a> [cos\_bucket\_name](#input\_cos\_bucket\_name) | Set the name of your COS bucket. | `string` | `""` | no |
@@ -105,11 +117,14 @@ No resources.
 | <a name="input_create_cos"></a> [create\_cos](#input\_create\_cos) | Set to `true` to create COS. | `bool` | `true` | no |
 | <a name="input_create_cos_bucket"></a> [create\_cos\_bucket](#input\_create\_cos\_bucket) | Set to `true` to create a COS bucket. | `bool` | `true` | no |
 | <a name="input_create_icr"></a> [create\_icr](#input\_create\_icr) | Set to `true` to create ICR namespace | `bool` | `true` | no |
-| <a name="input_create_kp"></a> [create\_kp](#input\_create\_kp) | Set to `true` to create Key Protect instance. | `bool` | `true` | no |
+| <a name="input_create_key_protect"></a> [create\_key\_protect](#input\_create\_key\_protect) | Set to `true` to create Key Protect instance. | `bool` | `false` | no |
 | <a name="input_create_or_link_to_secrets_manager"></a> [create\_or\_link\_to\_secrets\_manager](#input\_create\_or\_link\_to\_secrets\_manager) | Set to `true` to setup Secrets Manager. If `sm_instance_id` instance is set then that Secrets Manager will be used. Otherwise a new Secrets Manager instance will be provisioned. | `bool` | `true` | no |
 | <a name="input_create_secrets"></a> [create\_secrets](#input\_create\_secrets) | Set to `true` to create `ibmcloud-api-key`, `cos-api-key` and `signing_key`. | `bool` | `true` | no |
 | <a name="input_existing_resource_group"></a> [existing\_resource\_group](#input\_existing\_resource\_group) | The name of an existing resource group to use. This supercedes the creation of a named resource group. See `resource_group` input. | `string` | `""` | no |
+| <a name="input_expiration_duration"></a> [expiration\_duration](#input\_expiration\_duration) | Time in hrs representing the validity period of secrets in Secrets Manager. Default 90 days. | `string` | `"2160h"` | no |
 | <a name="input_flavor"></a> [flavor](#input\_flavor) | The cluster specs. | `string` | `"bx2.2x8"` | no |
+| <a name="input_gpg_email"></a> [gpg\_email](#input\_gpg\_email) | The email address associated with the GPG key. | `string` | `"ibmer@ibm.com"` | no |
+| <a name="input_gpg_name"></a> [gpg\_name](#input\_gpg\_name) | The name to be associated with the GPG key. | `string` | `"IBMer"` | no |
 | <a name="input_iam_api_key_secret"></a> [iam\_api\_key\_secret](#input\_iam\_api\_key\_secret) | apikey | `string` | `"Place Holder"` | no |
 | <a name="input_iam_api_key_secret_name"></a> [iam\_api\_key\_secret\_name](#input\_iam\_api\_key\_secret\_name) | The name of the secret as it appears in Secret Manager. | `string` | `"ibmcloud-api-key"` | no |
 | <a name="input_ibmcloud_api_key"></a> [ibmcloud\_api\_key](#input\_ibmcloud\_api\_key) | API key belonging to the account in which all the resources are created. | `string` | n/a | yes |
@@ -123,8 +138,8 @@ No resources.
 | <a name="input_registry_namespace"></a> [registry\_namespace](#input\_registry\_namespace) | A unique namespace within the IBM Cloud Container Registry region where the application image is stored. | `string` | `"my-registry-namespace"` | no |
 | <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | The resource group that will be created and used, by default, for all resource creation and service instance lookups. | `string` | `""` | no |
 | <a name="input_signing_certifcate_secret_name"></a> [signing\_certifcate\_secret\_name](#input\_signing\_certifcate\_secret\_name) | The name of the secret as it appears in Secret Manager. | `string` | `"signing-certificate"` | no |
-| <a name="input_signing_certificate_secret"></a> [signing\_certificate\_secret](#input\_signing\_certificate\_secret) | apikey | `string` | `"Place Holder"` | no |
-| <a name="input_signing_key_secret"></a> [signing\_key\_secret](#input\_signing\_key\_secret) | apikey | `string` | `"Place Holder"` | no |
+| <a name="input_signing_certificate_secret"></a> [signing\_certificate\_secret](#input\_signing\_certificate\_secret) | apikey | `string` | `""` | no |
+| <a name="input_signing_key_secret"></a> [signing\_key\_secret](#input\_signing\_key\_secret) | apikey | `string` | `""` | no |
 | <a name="input_signing_key_secret_name"></a> [signing\_key\_secret\_name](#input\_signing\_key\_secret\_name) | The name of the secret as it appears in Secret Manager. | `string` | `"signing_key"` | no |
 | <a name="input_sm_existing_secret_group_id"></a> [sm\_existing\_secret\_group\_id](#input\_sm\_existing\_secret\_group\_id) | The Secret Group ID of an exiting secret group in a Secrets Manager instance. This will take precendence over `sm_secret_group_name`. | `string` | `""` | no |
 | <a name="input_sm_instance_id"></a> [sm\_instance\_id](#input\_sm\_instance\_id) | The instance ID of the Secrets Manager. | `string` | `""` | no |
@@ -160,6 +175,7 @@ No resources.
 | <a name="output_secrets_manager_name"></a> [secrets\_manager\_name](#output\_secrets\_manager\_name) | The Secrets Manager name. |
 | <a name="output_secrets_manager_resource_group_name"></a> [secrets\_manager\_resource\_group\_name](#output\_secrets\_manager\_resource\_group\_name) | The name of the resource group containing the Secrets Manager instance. |
 | <a name="output_secrets_manager_secrets_group"></a> [secrets\_manager\_secrets\_group](#output\_secrets\_manager\_secrets\_group) | The secret group containing the `ibmcloud-api-key` for running the pipelines. |
+| <a name="output_time"></a> [time](#output\_time) | n/a |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- BEGIN CONTRIBUTING HOOK -->
 

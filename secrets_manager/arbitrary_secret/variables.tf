@@ -16,6 +16,9 @@ variable "secret_labels" {
   default     = []
 }
 
+variable "expiration_date" {
+}
+
 variable "secret_payload_password" {
 }
 

@@ -18,7 +18,11 @@ locals {
   use_vpc = (
     (var.use_free_tier) ? false : var.create_cluster
   )
+
+  secret_duration = timeadd(time_static.timestamp.rfc3339, var.expiration_duration)
 }
+
+resource "time_static" "timestamp" {}
 
 module "resource_group" {
   source                  = "./resource_group"
@@ -73,9 +77,15 @@ module "sm" {
   resource_group_name = var.sm_resource_group_name
 }
 
-#resource "ibm_iam_api_key" "iam_api_key" {
-#  name = "ibmcloud-api-key"
-#}
+resource "ibm_iam_api_key" "iam_api_key" {
+  count = ((var.create_secrets == true) && (var.create_or_link_to_secrets_manager == true)) ? 1 : 0
+  name  = "ibmcloud-api-key"
+}
+
+resource "ibm_iam_api_key" "cos_iam_api_key" {
+  count = ((var.create_secrets == true) && (var.create_or_link_to_secrets_manager == true)) ? 1 : 0
+  name  = "cos-api-key"
+}
 
 module "sm_secret_group" {
   count                       = ((var.create_secrets == true) && (var.create_or_link_to_secrets_manager == true)) ? 1 : 0
@@ -96,7 +106,8 @@ module "sm_arbitrary_secret_ibmcloud_api_key" {
   secret_group_id         = module.sm_secret_group[0].secret_group_id
   secret_name             = var.iam_api_key_secret_name
   secret_description      = "The IBMCloud apikey for running the pipelines."
-  secret_payload_password = var.iam_api_key_secret
+  secret_payload_password = (var.iam_api_key_secret == "") ? ibm_iam_api_key.iam_api_key[0].apikey : var.iam_api_key_secret
+  expiration_date         = local.secret_duration
 }
 
 module "sm_arbitrary_secret_cos_apikey" {
@@ -108,7 +119,8 @@ module "sm_arbitrary_secret_cos_apikey" {
   secret_group_id         = module.sm_secret_group[0].secret_group_id
   secret_name             = var.cos_api_key_secret_name
   secret_description      = "The COS apikey for accessing the associated COS instance."
-  secret_payload_password = var.cos_api_key_secret
+  secret_payload_password = (var.cos_api_key_secret == "") ? ibm_iam_api_key.cos_iam_api_key[0].apikey : var.cos_api_key_secret
+  expiration_date         = local.secret_duration
 }
 
 module "sm_arbitrary_secret_signing_key" {
@@ -121,6 +133,7 @@ module "sm_arbitrary_secret_signing_key" {
   secret_name             = var.signing_key_secret_name
   secret_description      = "The gpg signing key for signing images."
   secret_payload_password = var.signing_key_secret
+  expiration_date         = local.secret_duration
 }
 
 module "sm_arbitrary_secret_signing_certifcate" {
@@ -133,6 +146,7 @@ module "sm_arbitrary_secret_signing_certifcate" {
   secret_name             = var.signing_certifcate_secret_name
   secret_description      = "The public component of the GPG signing key for validating image signatures."
   secret_payload_password = var.signing_certificate_secret
+  expiration_date         = local.secret_duration
 }
 
 module "kp" {
@@ -164,4 +178,8 @@ module "vpc_cluster" {
   kube_version      = var.kube_version
   vpc_region        = (var.vpc_region == "") ? var.region : var.vpc_region
   resource_group_id = (var.cluster_resource_group_id == "") ? module.resource_group.resource_group_id : var.cluster_resource_group_id
+}
+
+output "time" {
+  value = local.secret_duration
 }

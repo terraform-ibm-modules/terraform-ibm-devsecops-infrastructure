@@ -321,6 +321,11 @@ variable "signing_certifcate_secret_name" {
   default     = "signing-certificate"
 }
 
+variable "expiration_duration" {
+  type        = string
+  description = "Time in hrs representing the validity period of secrets in Secrets Manager. Default 90 days."
+  default     = "2160h"
+}
 
 variable "signing_key_secret" {
   type        = string

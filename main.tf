@@ -64,6 +64,19 @@ module "cos_bucket" {
   add_cos_bucket_name_suffix = var.cos_add_random_cos_bucket_suffix
 }
 
+#################### SECRETS #######################
+resource "ibm_iam_api_key" "iam_api_key" {
+  count = ((var.create_secrets == true) && (var.create_or_link_to_secrets_manager == true)) ? 1 : 0
+  name  = "ibmcloud-api-key"
+}
+
+resource "ibm_iam_api_key" "cos_iam_api_key" {
+  count = ((var.create_secrets == true) && (var.create_or_link_to_secrets_manager == true)) ? 1 : 0
+  name  = "cos-api-key"
+}
+
+
+####### SECRETS MANAGER #####################
 module "sm" {
   count               = (var.create_or_link_to_secrets_manager) ? 1 : 0
   source              = "./secrets_manager/secrets_manager_instance"
@@ -77,15 +90,7 @@ module "sm" {
   resource_group_name = var.sm_resource_group_name
 }
 
-resource "ibm_iam_api_key" "iam_api_key" {
-  count = ((var.create_secrets == true) && (var.create_or_link_to_secrets_manager == true)) ? 1 : 0
-  name  = "ibmcloud-api-key"
-}
 
-resource "ibm_iam_api_key" "cos_iam_api_key" {
-  count = ((var.create_secrets == true) && (var.create_or_link_to_secrets_manager == true)) ? 1 : 0
-  name  = "cos-api-key"
-}
 
 module "sm_secret_group" {
   count                       = ((var.create_secrets == true) && (var.create_or_link_to_secrets_manager == true)) ? 1 : 0
@@ -110,7 +115,7 @@ module "sm_arbitrary_secret_ibmcloud_api_key" {
   expiration_date         = local.secret_duration
 }
 
-module "sm_arbitrary_secret_cos_apikey" {
+module "sm_arbitrary_secret_cos_api_key" {
   count                   = ((var.create_secrets == true) && (var.create_or_link_to_secrets_manager == true)) ? 1 : 0
   depends_on              = [module.sm_secret_group]
   source                  = "./secrets_manager/arbitrary_secret"
@@ -149,12 +154,57 @@ module "sm_arbitrary_secret_signing_certifcate" {
   expiration_date         = local.secret_duration
 }
 
+############# KEY PROTECT #################################
 module "kp" {
-  count             = (var.create_kp) ? 1 : 0
+  count             = (var.create_key_protect) ? 1 : 0
   source            = "./keyprotect/keyprotect_instance"
   kp_name           = var.kp_name
   kp_location       = (var.kp_location == "") ? var.region : var.kp_location
   resource_group_id = (var.kp_resource_group_id == "") ? module.resource_group.resource_group_id : var.kp_resource_group_id
+}
+
+module "kp_secret_iamcloud_api_key" {
+  count                   = ((var.create_secrets == true) && (var.create_key_protect == true)) ? 1 : 0
+  source                  = "./keyprotect/keyprotect_key"
+  depends_on              = [module.kp, ibm_iam_api_key.iam_api_key]
+  keyprotect_guid         = module.kp[0].instance_id
+  secret_name             = var.iam_api_key_secret_name
+  is_standard_key         = true
+  enable_force_delete     = true
+  secret_payload_password = (var.iam_api_key_secret == "") ? ibm_iam_api_key.iam_api_key[0].apikey : var.iam_api_key_secret
+}
+
+module "kp_secret_cos_api_key" {
+  count                   = ((var.create_secrets == true) && (var.create_key_protect == true)) ? 1 : 0
+  source                  = "./keyprotect/keyprotect_key"
+  depends_on              = [module.kp, ibm_iam_api_key.iam_api_key]
+  keyprotect_guid         = module.kp[0].instance_id
+  secret_name             = var.cos_api_key_secret_name
+  is_standard_key         = true
+  enable_force_delete     = true
+  secret_payload_password = (var.cos_api_key_secret == "") ? ibm_iam_api_key.cos_iam_api_key[0].apikey : var.cos_api_key_secret
+}
+
+module "kp_secret_signing_key" {
+  count                   = ((var.create_secrets == true) && (var.create_key_protect == true)) ? 1 : 0
+  source                  = "./keyprotect/keyprotect_key"
+  depends_on              = [module.kp, ibm_iam_api_key.iam_api_key]
+  keyprotect_guid         = module.kp[0].instance_id
+  secret_name             = var.signing_key_secret_name
+  is_standard_key         = true
+  enable_force_delete     = true
+  secret_payload_password = var.signing_key_secret
+}
+
+module "kp_secret_signing_certifcate" {
+  count                   = ((var.create_secrets == true) && (var.create_key_protect == true)) ? 1 : 0
+  source                  = "./keyprotect/keyprotect_key"
+  depends_on              = [module.kp, ibm_iam_api_key.iam_api_key]
+  keyprotect_guid         = module.kp[0].instance_id
+  secret_name             = var.signing_certifcate_secret_name
+  is_standard_key         = true
+  enable_force_delete     = true
+  secret_payload_password = var.signing_certificate_secret
 }
 
 module "cd" {

@@ -342,10 +342,10 @@ variable "signing_key_secret_name" {
 
 ######KEY PROTECT ###########################
 
-variable "create_kp" {
+variable "create_key_protect" {
   type        = bool
   description = "Set to `true` to create Key Protect instance."
-  default     = true
+  default     = false
 }
 
 variable "kp_name" {

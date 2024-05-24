@@ -312,7 +312,7 @@ variable "signing_certificate_secret" {
   type        = string
   description = "apikey"
   sensitive   = true
-  default     = "Place Holder"
+  default     = ""
 }
 
 variable "signing_certifcate_secret_name" {
@@ -331,7 +331,7 @@ variable "signing_key_secret" {
   type        = string
   description = "apikey"
   sensitive   = true
-  default     = "Place Holder"
+  default     = ""
 }
 
 variable "signing_key_secret_name" {
@@ -340,6 +340,17 @@ variable "signing_key_secret_name" {
   default     = "signing_key"
 }
 
+variable "gpg_name" {
+  type        = string
+  description = "The name to be associated with the GPG key."
+  default     = "IBMer"
+}
+
+variable "gpg_email" {
+  type        = string
+  description = "The email address associated with the GPG key."
+  default     = "ibmer@ibm.com"
+}
 ######KEY PROTECT ###########################
 
 variable "create_key_protect" {

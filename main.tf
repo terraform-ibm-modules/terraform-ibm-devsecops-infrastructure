@@ -66,13 +66,20 @@ module "cos_bucket" {
 
 #################### SECRETS #######################
 resource "ibm_iam_api_key" "iam_api_key" {
-  count = ((var.create_secrets == true) && (var.create_or_link_to_secrets_manager == true)) ? 1 : 0
+  count = ((var.create_secrets == true) && ((var.create_or_link_to_secrets_manager == true) || (var.create_key_protect == true))) ? 1 : 0
   name  = "ibmcloud-api-key"
 }
 
 resource "ibm_iam_api_key" "cos_iam_api_key" {
-  count = ((var.create_secrets == true) && (var.create_or_link_to_secrets_manager == true)) ? 1 : 0
+  count = ((var.create_secrets == true) && ((var.create_or_link_to_secrets_manager == true) || (var.create_key_protect == true))) ? 1 : 0
   name  = "cos-api-key"
+}
+
+module "signing_keys" {
+  count     = ((var.create_secrets == true) && ((var.create_or_link_to_secrets_manager == true) || (var.create_key_protect == true))) ? 1 : 0
+  source    = "./gpg-key"
+  gpg_name  = var.gpg_name
+  gpg_email = var.gpg_email
 }
 
 
@@ -137,7 +144,7 @@ module "sm_arbitrary_secret_signing_key" {
   secret_group_id         = module.sm_secret_group[0].secret_group_id
   secret_name             = var.signing_key_secret_name
   secret_description      = "The gpg signing key for signing images."
-  secret_payload_password = var.signing_key_secret
+  secret_payload_password = (var.signing_key_secret == "") ? module.signing_keys[0].gpg_key : var.signing_key_secret
   expiration_date         = local.secret_duration
 }
 
@@ -150,7 +157,7 @@ module "sm_arbitrary_secret_signing_certifcate" {
   secret_group_id         = module.sm_secret_group[0].secret_group_id
   secret_name             = var.signing_certifcate_secret_name
   secret_description      = "The public component of the GPG signing key for validating image signatures."
-  secret_payload_password = var.signing_certificate_secret
+  secret_payload_password = (var.signing_certificate_secret == "") ? module.signing_keys[0].gpg_public_certificate : var.signing_certificate_secret
   expiration_date         = local.secret_duration
 }
 
@@ -193,7 +200,7 @@ module "kp_secret_signing_key" {
   secret_name             = var.signing_key_secret_name
   is_standard_key         = true
   enable_force_delete     = true
-  secret_payload_password = var.signing_key_secret
+  secret_payload_password = (var.signing_key_secret == "") ? module.signing_keys[0].gpg_key : var.signing_key_secret
 }
 
 module "kp_secret_signing_certifcate" {
@@ -204,7 +211,7 @@ module "kp_secret_signing_certifcate" {
   secret_name             = var.signing_certifcate_secret_name
   is_standard_key         = true
   enable_force_delete     = true
-  secret_payload_password = var.signing_certificate_secret
+  secret_payload_password = (var.signing_certificate_secret == "") ? module.signing_keys[0].gpg_public_certificate : var.signing_certificate_secret
 }
 
 module "cd" {

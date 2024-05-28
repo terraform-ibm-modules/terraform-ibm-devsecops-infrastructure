@@ -1,6 +1,6 @@
 resource "random_string" "resource_suffix" {
   count   = (var.add_cos_bucket_name_suffix) ? 1 : 0
-  length  = 4
+  length  = 8
   special = false
   upper   = false
 }

@@ -70,7 +70,7 @@ variable "cd_instance_region" {
 variable "cd_instance_name" {
   type        = string
   description = "The CD instance name."
-  default     = "my-cd-instance"
+  default     = "devsecops_cd"
 }
 
 variable "cd_service_plan" {
@@ -108,7 +108,7 @@ variable "cos_add_random_cos_bucket_suffix" {
 variable "cos_instance_name" {
   type        = string
   description = "The name of the COS instance that contains the COS buckets."
-  default     = "my-cos-instance"
+  default     = "devsecops-cos"
 }
 
 variable "cos_instance_id" {
@@ -150,7 +150,7 @@ variable "cos_bucket_region" {
 variable "cos_bucket_name" {
   type        = string
   description = "Set the name of your COS bucket."
-  default     = ""
+  default     = "devsecops"
 }
 
 variable "cos_default_retention" {
@@ -188,13 +188,19 @@ variable "create_icr" {
 variable "registry_namespace" {
   type        = string
   description = "A unique namespace within the IBM Cloud Container Registry region where the application image is stored."
-  default     = "my-registry-namespace"
+  default     = "devsecops"
 }
 
 variable "icr_resource_group_id" {
   type        = string
   description = "The resource group Id containing the registry region namespace."
   default     = ""
+}
+
+variable "add_icr_name_suffix" {
+  type        = bool
+  description = "Set to `true` to append a random 4 character string to the name of the value of the provided COS bucket name."
+  default     = true
 }
 
 ####### Resource Group ###############
@@ -207,7 +213,7 @@ variable "existing_resource_group" {
 variable "resource_group" {
   type        = string
   description = "The resource group that will be created and used, by default, for all resource creation and service instance lookups."
-  default     = ""
+  default     = "devsecops"
 }
 
 
@@ -229,7 +235,7 @@ variable "create_secrets" {
 variable "sm_name" {
   type        = string
   description = "The name of the Secrets Manager instance. "
-  default     = "Secrets Manager"
+  default     = "DevSecOps ALM"
 }
 
 variable "sm_service_endpoints" {
@@ -362,7 +368,7 @@ variable "create_key_protect" {
 variable "kp_name" {
   type        = string
   description = "The name of the Key Protect instance. "
-  default     = ""
+  default     = "DevSecOps ALM"
 }
 
 variable "kp_location" {

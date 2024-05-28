@@ -33,11 +33,12 @@ module "resource_group" {
 }
 
 module "icr" {
-  count              = (var.create_icr) ? 1 : 0
-  source             = "./icr"
-  depends_on         = [module.resource_group]
-  registry_namespace = var.registry_namespace
-  resource_group_id  = (var.icr_resource_group_id == "") ? module.resource_group.resource_group_id : var.icr_resource_group_id
+  count               = (var.create_icr) ? 1 : 0
+  source              = "./icr"
+  depends_on          = [module.resource_group]
+  registry_namespace  = var.registry_namespace
+  add_icr_name_suffix = var.add_icr_name_suffix
+  resource_group_id   = (var.icr_resource_group_id == "") ? module.resource_group.resource_group_id : var.icr_resource_group_id
 }
 
 module "cos" {

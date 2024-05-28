@@ -229,7 +229,7 @@ variable "create_secrets" {
 variable "sm_name" {
   type        = string
   description = "The name of the Secrets Manager instance. "
-  default     = ""
+  default     = "Secrets Manager"
 }
 
 variable "sm_service_endpoints" {

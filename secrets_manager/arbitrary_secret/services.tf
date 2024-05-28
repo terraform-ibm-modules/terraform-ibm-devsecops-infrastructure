@@ -6,5 +6,5 @@ resource "ibm_sm_arbitrary_secret" "arbitrary_secret" {
   description     = var.secret_description
   labels          = var.secret_labels
   payload         = var.secret_payload_password
-  expiration_date = var.expiration_date
+  expiration_date = (var.expiration_date == "") ? null : var.expiration_date
 }

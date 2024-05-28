@@ -11,18 +11,19 @@ function parse_input() {
 
     #Generate a file to pass into GPG cli
     touch "${FILE}"
-    echo "%echo Generating GPG key" >> "${FILE}"
-    echo "Key-Type: RSA" >> "${FILE}"
-    echo "Key-Length: 2048" >> "${FILE}"
-    echo "Subkey-Type: RSA" >> "${FILE}"
-    echo "Subkey-Length: 2048" >> "${FILE}"
-    echo "Name-Real: ${NAME}" >> "${FILE}"
-    echo "Name-Email: ${EMAIL}">> "${FILE}"
-    echo "%no-ask-passphrase" >> "${FILE}"
-    echo "%no-protection" >> "${FILE}"
-    echo "%commit" >> "${FILE}"
-    echo "%echo done" >> "${FILE}"
-    gpg --batch --gen-key "${FILE}"
+    {
+      echo "%echo Generating GPG key"
+      echo "Key-Type: RSA"
+      echo "Key-Length: 2048"
+      echo "Subkey-Type: RSA"
+      echo "Subkey-Length: 2048"
+      echo "Name-Real: ${NAME}"
+      echo "Name-Email: ${EMAIL}"
+      echo "%no-ask-passphrase"
+      echo "%no-protection"
+      echo "%commit"
+      echo "%echo done"
+    } >> "${FILE}"
 
     #Generate a GPG key
     gpg --batch --gen-key "${FILE}"

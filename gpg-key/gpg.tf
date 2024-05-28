@@ -2,8 +2,8 @@ data "external" "generate_gpg_secrets" {
   program = ["bash", "${path.module}/scripts/gpg_keys.sh"]
 
   query = {
-    name     = var.gpg_name
-    email    = var.gpg_email
+    name  = var.gpg_name
+    email = var.gpg_email
   }
 }
 
@@ -14,5 +14,5 @@ data "external" "generate_gpg_secrets" {
 #  }
 #  provisioner "local-exec" {
 #    command = "echo '${data.external.generate_gpg_secrets[0].result.signingkey}'"
-#  } 
+#  }
 #}

@@ -5,6 +5,8 @@ locals {
     (var.use_free_tier) ? "lite" : "standard"
   )
 
+  cos_retention = (var.use_free_tier) ? false : true
+
   sm_tier = (
     (var.sm_service_plan != "") ? var.sm_service_plan :
     (var.use_free_tier) ? "trial" : "standard"
@@ -52,7 +54,7 @@ module "cos_bucket" {
   count                      = (var.create_cos_bucket) ? 1 : 0
   source                     = "./cos/cos_bucket"
   depends_on                 = [module.cos]
-  service_plan               = local.cos_tier
+  enable_retention           = local.cos_retention
   storage_class              = var.cos_storage_class
   bucket_region              = (var.cos_bucket_region == "") ? var.region : var.cos_bucket_region
   bucket_name                = var.cos_bucket_name
@@ -235,8 +237,4 @@ module "vpc_cluster" {
   kube_version      = var.kube_version
   vpc_region        = (var.vpc_region == "") ? var.region : var.vpc_region
   resource_group_id = (var.cluster_resource_group_id == "") ? module.resource_group.resource_group_id : var.cluster_resource_group_id
-}
-
-output "time" {
-  value = local.secret_duration
 }

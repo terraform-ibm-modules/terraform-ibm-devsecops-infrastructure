@@ -20,7 +20,7 @@ A Terraform module for provisioning the infrastructure required by the DevSecOps
 
 ```hcl
 module "terraform_devsecops_infra" {
-  source                   = "git::https://github.com/terraform-ibm-modules/terraform-ibm-devsecops-infrastructure?ref=v1.0.0-beta.1"
+  source                   = "git::https://github.com/terraform-ibm-modules/terraform-ibm-devsecops-infrastructure?ref=v1.2.0-beta.5"
   region                   = "us-south"
   resource_group           = "my-resource-group" #creates the resource group
   #or
@@ -54,7 +54,6 @@ statement instead the previous block.
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
 | <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 1.60.0 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.5.1, < 4.0.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.9.1 |
 
 ### Modules
@@ -144,7 +143,7 @@ statement instead the previous block.
 | <a name="input_sm_existing_secret_group_id"></a> [sm\_existing\_secret\_group\_id](#input\_sm\_existing\_secret\_group\_id) | The Secret Group ID of an exiting secret group in a Secrets Manager instance. This will take precendence over `sm_secret_group_name`. | `string` | `""` | no |
 | <a name="input_sm_instance_id"></a> [sm\_instance\_id](#input\_sm\_instance\_id) | The instance ID of the Secrets Manager. | `string` | `""` | no |
 | <a name="input_sm_location"></a> [sm\_location](#input\_sm\_location) | The region location of the Secrets Manager instance. | `string` | `""` | no |
-| <a name="input_sm_name"></a> [sm\_name](#input\_sm\_name) | The name of the Secrets Manager instance. | `string` | `""` | no |
+| <a name="input_sm_name"></a> [sm\_name](#input\_sm\_name) | The name of the Secrets Manager instance. | `string` | `"Secrets Manager"` | no |
 | <a name="input_sm_resource_group_id"></a> [sm\_resource\_group\_id](#input\_sm\_resource\_group\_id) | The ID of the resource group. | `string` | `""` | no |
 | <a name="input_sm_resource_group_name"></a> [sm\_resource\_group\_name](#input\_sm\_resource\_group\_name) | The name of the resource group. | `string` | `""` | no |
 | <a name="input_sm_secret_group_name"></a> [sm\_secret\_group\_name](#input\_sm\_secret\_group\_name) | The name of the Secrets Group that is created. | `string` | `"devsecops"` | no |
@@ -175,7 +174,6 @@ statement instead the previous block.
 | <a name="output_secrets_manager_name"></a> [secrets\_manager\_name](#output\_secrets\_manager\_name) | The Secrets Manager name. |
 | <a name="output_secrets_manager_resource_group_name"></a> [secrets\_manager\_resource\_group\_name](#output\_secrets\_manager\_resource\_group\_name) | The name of the resource group containing the Secrets Manager instance. |
 | <a name="output_secrets_manager_secrets_group"></a> [secrets\_manager\_secrets\_group](#output\_secrets\_manager\_secrets\_group) | The secret group containing the `ibmcloud-api-key` for running the pipelines. |
-| <a name="output_time"></a> [time](#output\_time) | n/a |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- BEGIN CONTRIBUTING HOOK -->
 

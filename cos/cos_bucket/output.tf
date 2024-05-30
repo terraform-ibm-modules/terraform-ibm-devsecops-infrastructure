@@ -18,6 +18,6 @@ output "s3_endpoint_direct" {
 }
 
 output "bucket_name" {
-  value       = var.bucket_name
+  value       = (var.add_cos_bucket_name_suffix) ? format("%s-%s", var.bucket_name, random_string.resource_suffix[0].result) : var.bucket_name
   description = "The name of bucket created by the SPS prefix and onboarding team name suffix"
 }

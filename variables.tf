@@ -101,7 +101,7 @@ variable "create_cos_bucket" {
 
 variable "cos_add_random_cos_bucket_suffix" {
   type        = bool
-  description = "Set to `true` to append a 4 character random string to the specified COS bucket name."
+  description = "Set to `true` to append a 8 character random string to the specified COS bucket name."
   default     = true
 }
 
@@ -199,7 +199,7 @@ variable "icr_resource_group_id" {
 
 variable "add_icr_name_suffix" {
   type        = bool
-  description = "Set to `true` to append a random 4 character string to the name of the value of the provided COS bucket name."
+  description = "Set to `true` to append a random 8 character string to the name of the value of the provided COS bucket name."
   default     = true
 }
 
@@ -292,7 +292,7 @@ variable "cos_api_key_secret" {
   type        = string
   description = "apikey"
   sensitive   = true
-  default     = "Place Holder"
+  default     = ""
 }
 
 variable "cos_api_key_secret_name" {
@@ -305,7 +305,7 @@ variable "iam_api_key_secret" {
   type        = string
   description = "apikey"
   sensitive   = true
-  default     = "Place Holder"
+  default     = ""
 }
 
 variable "iam_api_key_secret_name" {
@@ -401,4 +401,10 @@ variable "use_free_tier" {
   type        = bool
   description = "Set to `true` to use free tier. VPC cluster is not suported in a free tier."
   default     = false
+}
+
+variable "random_string_length" {
+  type        = number
+  description = "The length of the random suffix added to the resource name."
+  default     = 8
 }

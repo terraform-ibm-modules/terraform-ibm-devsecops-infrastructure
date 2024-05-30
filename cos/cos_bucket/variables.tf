@@ -56,3 +56,9 @@ variable "add_cos_bucket_name_suffix" {
   description = "Set to `true` to append a random 4 character string to the name of the value of the provided COS bucket name."
   default     = false
 }
+
+variable "random_string_length" {
+  type        = number
+  description = "The length of the random suffix added to the resource name."
+  default     = 8
+}

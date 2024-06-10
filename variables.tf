@@ -70,7 +70,7 @@ variable "cd_instance_region" {
 variable "cd_instance_name" {
   type        = string
   description = "The CD instance name."
-  default     = "my-cd-instance"
+  default     = "devsecops_cd"
 }
 
 variable "cd_service_plan" {
@@ -99,10 +99,16 @@ variable "create_cos_bucket" {
   default     = true
 }
 
+variable "cos_add_random_cos_bucket_suffix" {
+  type        = bool
+  description = "Set to `true` to append a 8 character random string to the specified COS bucket name."
+  default     = true
+}
+
 variable "cos_instance_name" {
   type        = string
   description = "The name of the COS instance that contains the COS buckets."
-  default     = "my-cos-instance"
+  default     = "devsecops-cos"
 }
 
 variable "cos_instance_id" {
@@ -144,7 +150,7 @@ variable "cos_bucket_region" {
 variable "cos_bucket_name" {
   type        = string
   description = "Set the name of your COS bucket."
-  default     = ""
+  default     = "devsecops"
 }
 
 variable "cos_default_retention" {
@@ -182,13 +188,19 @@ variable "create_icr" {
 variable "registry_namespace" {
   type        = string
   description = "A unique namespace within the IBM Cloud Container Registry region where the application image is stored."
-  default     = "my-registry-namespace"
+  default     = "devsecops"
 }
 
 variable "icr_resource_group_id" {
   type        = string
   description = "The resource group Id containing the registry region namespace."
   default     = ""
+}
+
+variable "add_icr_name_suffix" {
+  type        = bool
+  description = "Set to `true` to append a random 8 character string to the name of the value of the provided COS bucket name."
+  default     = true
 }
 
 ####### Resource Group ###############
@@ -201,22 +213,29 @@ variable "existing_resource_group" {
 variable "resource_group" {
   type        = string
   description = "The resource group that will be created and used, by default, for all resource creation and service instance lookups."
-  default     = ""
+  default     = "devsecops"
 }
 
 
 ############## SECRETS MANAGER ############################
 ############## SM Instance ########################
-variable "create_sm" {
+
+variable "create_or_link_to_secrets_manager" {
   type        = bool
-  description = "Set to `true` to create Secrets Manager instance."
+  description = "Set to `true` to setup Secrets Manager. If `sm_instance_id` instance is set then that Secrets Manager will be used. Otherwise a new Secrets Manager instance will be provisioned."
+  default     = true
+}
+
+variable "create_secrets" {
+  type        = bool
+  description = "Set to `true` to create `ibmcloud-api-key`, `cos-api-key` and `signing_key`."
   default     = true
 }
 
 variable "sm_name" {
   type        = string
   description = "The name of the Secrets Manager instance. "
-  default     = ""
+  default     = "DevSecOps ALM"
 }
 
 variable "sm_service_endpoints" {
@@ -237,24 +256,119 @@ variable "sm_location" {
   default     = ""
 }
 
+variable "sm_existing_secret_group_id" {
+  type        = string
+  description = "The Secret Group ID of an exiting secret group in a Secrets Manager instance. This will take precendence over `sm_secret_group_name`."
+  default     = ""
+}
+
 variable "sm_resource_group_id" {
   type        = string
   description = "The ID of the resource group."
   default     = ""
 }
 
+variable "sm_resource_group_name" {
+  type        = string
+  description = "The name of the resource group."
+  default     = ""
+}
+
+variable "sm_instance_id" {
+  type        = string
+  description = "The instance ID of the Secrets Manager."
+  default     = ""
+}
+
+variable "sm_secret_group_name" {
+  type        = string
+  description = "The name of the Secrets Group that is created."
+  default     = "devsecops"
+}
+
+########### SECRET MANAGER SECRETS ###########################
+
+variable "cos_api_key_secret" {
+  type        = string
+  description = "apikey"
+  sensitive   = true
+  default     = ""
+}
+
+variable "cos_api_key_secret_name" {
+  type        = string
+  description = "The name of the secret as it appears in Secret Manager."
+  default     = "cos-api-key"
+}
+
+variable "iam_api_key_secret" {
+  type        = string
+  description = "apikey"
+  sensitive   = true
+  default     = ""
+}
+
+variable "iam_api_key_secret_name" {
+  type        = string
+  description = "The name of the secret as it appears in Secret Manager."
+  default     = "ibmcloud-api-key"
+}
+
+variable "signing_certificate_secret" {
+  type        = string
+  description = "apikey"
+  sensitive   = true
+  default     = ""
+}
+
+variable "signing_certifcate_secret_name" {
+  type        = string
+  description = "The name of the secret as it appears in Secret Manager."
+  default     = "signing-certificate"
+}
+
+variable "expiration_duration" {
+  type        = string
+  description = "Time in hrs representing the validity period of secrets in Secrets Manager. Default 90 days."
+  default     = "2160h"
+}
+
+variable "signing_key_secret" {
+  type        = string
+  description = "apikey"
+  sensitive   = true
+  default     = ""
+}
+
+variable "signing_key_secret_name" {
+  type        = string
+  description = "The name of the secret as it appears in Secret Manager."
+  default     = "signing_key"
+}
+
+variable "gpg_name" {
+  type        = string
+  description = "The name to be associated with the GPG key."
+  default     = "IBMer"
+}
+
+variable "gpg_email" {
+  type        = string
+  description = "The email address associated with the GPG key."
+  default     = "ibmer@ibm.com"
+}
 ######KEY PROTECT ###########################
 
-variable "create_kp" {
+variable "create_key_protect" {
   type        = bool
   description = "Set to `true` to create Key Protect instance."
-  default     = true
+  default     = false
 }
 
 variable "kp_name" {
   type        = string
   description = "The name of the Key Protect instance. "
-  default     = ""
+  default     = "DevSecOps ALM"
 }
 
 variable "kp_location" {
@@ -287,4 +401,10 @@ variable "use_free_tier" {
   type        = bool
   description = "Set to `true` to use free tier. VPC cluster is not suported in a free tier."
   default     = false
+}
+
+variable "random_string_length" {
+  type        = number
+  description = "The length of the random suffix added to the resource name."
+  default     = 8
 }

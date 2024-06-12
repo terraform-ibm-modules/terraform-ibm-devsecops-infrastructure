@@ -153,6 +153,18 @@ variable "cos_bucket_name" {
   default     = "devsecops"
 }
 
+variable "cos_bucket_type" {
+  type        = string
+  description = "The type of the bucket. Supported values are `single_site_location`, `region_location`, and `cross_region_location`."
+  default     = "region_location"
+}
+
+variable "existing_bucket_name" {
+  type        = string
+  description = "Set the name of an existing COS bucket."
+  default     = ""
+}
+
 variable "cos_default_retention" {
   type        = string
   description = "The default retention period are defined by this policy and apply to all objects in the bucket."

@@ -60,6 +60,8 @@ module "cos_bucket" {
   storage_class              = var.cos_storage_class
   bucket_region              = (var.cos_bucket_region == "") ? var.region : var.cos_bucket_region
   bucket_name                = var.cos_bucket_name
+  bucket_type                = var.cos_bucket_type
+  existing_bucket_name       = var.existing_bucket_name
   cos_instance_id            = (var.cos_instance_id == "") ? module.cos[0].cos_instance_id : var.cos_instance_id
   default_retention          = var.cos_default_retention
   minimum_retention          = var.cos_minimum_retention

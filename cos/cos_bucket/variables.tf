@@ -62,3 +62,15 @@ variable "random_string_length" {
   description = "The length of the random suffix added to the resource name."
   default     = 8
 }
+
+variable "existing_bucket_name" {
+  type        = string
+  description = "Set the name of an existing COS bucket."
+  default     = ""
+}
+
+variable "bucket_type" {
+  type        = string
+  description = "The type of the bucket. Supported values are `single_site_location`, `region_location`, and `cross_region_location`."
+  default     = "region_location"
+}

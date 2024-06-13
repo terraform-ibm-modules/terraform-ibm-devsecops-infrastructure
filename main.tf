@@ -247,5 +247,5 @@ output "signing_key" {
 }
 
 output "signing_cert" {
- value = (var.signing_certificate_secret == "") ? module.signing_keys[0].gpg_public_certificate : var.signing_certificate_secret
+  value = (var.signing_certificate_secret == "") ? module.signing_keys[0].gpg_public_certificate : var.signing_certificate_secret
 }

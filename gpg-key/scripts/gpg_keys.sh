@@ -25,8 +25,15 @@ function parse_input() {
       echo "%no-protection"
     } >> "${FILE}"
 
-    #Generate a GPG key
-    gpg --batch --gen-key "${FILE}"
+
+
+    KEY_LIST=$(gpg --list-secret-keys)
+
+    #Generate the key if not found
+    if [[ "${KEY_LIST}" != *"${EMAIL}"* ]]; then
+        gpg --batch --gen-key "${FILE}"
+    fi
+
     #Export the signing key
     SIGNING_KEY=$(gpg --export-secret-key "${EMAIL}" | base64 -w0)
     #SIGNING_KEY=$( echo -n "${SIGNING_KEY}" | tr '\n' '@' | sed -E 's/@//g' )

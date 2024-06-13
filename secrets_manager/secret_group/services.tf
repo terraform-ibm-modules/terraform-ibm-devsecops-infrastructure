@@ -14,4 +14,5 @@ data "ibm_sm_secret_group" "secret_group" {
   instance_id     = var.sm_instance_id
   region          = var.sm_location
   secret_group_id = var.sm_existing_secret_group_id
+  endpoint_type   = var.sm_endpoint_type
 }

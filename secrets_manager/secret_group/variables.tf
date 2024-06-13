@@ -21,3 +21,9 @@ variable "sm_existing_secret_group_id" {
   description = "The ID of an existing Secrets Manager secret group."
   default     = ""
 }
+
+variable "sm_endpoint_type" {
+  type        = string
+  description = "The Endpoint type."
+  default     = ""
+}

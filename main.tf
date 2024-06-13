@@ -114,6 +114,7 @@ module "sm_secret_group" {
   sm_location                 = module.sm[0].sm_location
   sm_secret_group_name        = var.sm_secret_group_name
   sm_existing_secret_group_id = var.sm_existing_secret_group_id
+  sm_endpoint_type            = var.sm_group_endpoint_type
 }
 
 module "sm_arbitrary_secret_ibmcloud_api_key" {

@@ -128,6 +128,7 @@ module "sm_arbitrary_secret_ibmcloud_api_key" {
   secret_description      = "The IBMCloud apikey for running the pipelines."
   secret_payload_password = (var.iam_api_key_secret == "") ? ibm_iam_api_key.iam_api_key[0].apikey : var.iam_api_key_secret
   expiration_date         = local.secret_duration
+  sm_endpoint_type        = var.sm_group_endpoint_type
 }
 
 module "sm_arbitrary_secret_cos_api_key" {
@@ -141,6 +142,7 @@ module "sm_arbitrary_secret_cos_api_key" {
   secret_description      = "The COS apikey for accessing the associated COS instance."
   secret_payload_password = (var.cos_api_key_secret == "") ? ibm_iam_api_key.cos_iam_api_key[0].apikey : var.cos_api_key_secret
   expiration_date         = local.secret_duration
+  sm_endpoint_type        = var.sm_group_endpoint_type
 }
 
 module "sm_arbitrary_secret_signing_key" {
@@ -154,6 +156,7 @@ module "sm_arbitrary_secret_signing_key" {
   secret_description      = "The gpg signing key for signing images."
   secret_payload_password = (var.signing_key_secret == "") ? module.signing_keys[0].gpg_key : var.signing_key_secret
   expiration_date         = local.secret_duration
+  sm_endpoint_type        = var.sm_group_endpoint_type
 }
 
 module "sm_arbitrary_secret_signing_certifcate" {
@@ -167,6 +170,7 @@ module "sm_arbitrary_secret_signing_certifcate" {
   secret_description      = "The public component of the GPG signing key for validating image signatures."
   secret_payload_password = (var.signing_certificate_secret == "") ? module.signing_keys[0].gpg_public_certificate : var.signing_certificate_secret
   expiration_date         = local.secret_duration
+  sm_endpoint_type        = var.sm_group_endpoint_type
 }
 
 ############# KEY PROTECT #################################

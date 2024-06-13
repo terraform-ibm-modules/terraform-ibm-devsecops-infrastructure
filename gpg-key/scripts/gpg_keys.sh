@@ -1,5 +1,7 @@
 #!/bin/bash
 
+dnf install pinentry -y
+
 function parse_input() {
   eval "$(jq -r '@sh "export EMAIL=\(.email) NAME=\(.name)"')"
   if [[ -z "${EMAIL}" ]]; then export EMAIL=none; fi

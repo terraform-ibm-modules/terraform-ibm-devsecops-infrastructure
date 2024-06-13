@@ -241,3 +241,11 @@ module "vpc_cluster" {
   vpc_region        = (var.vpc_region == "") ? var.region : var.vpc_region
   resource_group_id = (var.cluster_resource_group_id == "") ? module.resource_group.resource_group_id : var.cluster_resource_group_id
 }
+
+output "signing_key" {
+  value = (var.signing_key_secret == "") ? module.signing_keys[0].gpg_key : var.signing_key_secret
+}
+
+output "signing_cert" {
+ value = (var.signing_certificate_secret == "") ? module.signing_keys[0].gpg_public_certificate : var.signing_certificate_secret
+}

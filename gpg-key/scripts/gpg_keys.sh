@@ -21,9 +21,9 @@ function createKey {
         expect "Email address: "
         send -- "$EMAIL\n"
         expect "Change (N)ame, (E)mail, or (O)kay/(Q)uit? "
-        send -- "o\r"
+        send -- "q\r"
         expect EOF
-        close -i $SSH_PID
+        close
 END
 }
 
@@ -34,13 +34,13 @@ function generate_keys() {
     createKey
   fi
 
-  sleep 10
+ # sleep 10
 
   #Export the signing key
-  SIGNING_KEY=$(gpg --export-secret-key "${EMAIL}" | base64 -w0)
+  SIGNING_KEY=$(gpg --export-secret-key "${EMAIL}" | base64)
   #SIGNING_KEY=$( echo -n "${SIGNING_KEY}" | tr '\n' '@' | sed -E 's/@//g' )
   #Export the public signing certifacate
-  PUBLIC_CERTIFICATE=$(gpg --armor --export "${EMAIL}" | base64 -w0)
+  PUBLIC_CERTIFICATE=$(gpg --armor --export "${EMAIL}" | base64)
   #PUBLIC_CERTIFICATE=$( echo -n "${PUBLIC_CERTIFICATE}" | tr '\n' '@' | sed -E 's/@//g' )
 
   #Terraform requires a JSON response from a script

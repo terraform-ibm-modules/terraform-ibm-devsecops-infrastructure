@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#dnf install pinentry -y
-#dnf install expect -y
+dnf install pinentry -y
+dnf install expect -y
 
 function parse_input() {
   eval "$(jq -r '@sh "export EMAIL=\(.email) NAME=\(.name)"')"
@@ -12,7 +12,8 @@ function parse_input() {
 export EMAIL="huayuenh@ie.ibm.com"
 export NAME="hyhyh"
 function createKey {
-    /usr/bin/expect << EOF 
+  SSH_PID=$(
+    /usr/bin/expect << END 
         set timeout -1
         spawn bash
         send "gpg --pinentry-mode loopback --passphrase='' --generate-key\r"
@@ -22,9 +23,10 @@ function createKey {
         send -- "$EMAIL\n"
         expect "Change (N)ame, (E)mail, or (O)kay/(Q)uit? "
         send -- "o\r"
-        expect eof
-        close
-EOF
+        expect EOF
+        close -i $SSH_PID
+END
+)
 }
 
 function generate_keys() {
@@ -34,13 +36,13 @@ function generate_keys() {
     $(createKey) &
   fi
 
-  #sleep 10
+  sleep 10
 
   #Export the signing key
-  SIGNING_KEY=$(gpg --export-secret-key "${EMAIL}" | base64)
+  SIGNING_KEY=$(gpg --export-secret-key "${EMAIL}" | base64 -w0)
   #SIGNING_KEY=$( echo -n "${SIGNING_KEY}" | tr '\n' '@' | sed -E 's/@//g' )
   #Export the public signing certifacate
-  PUBLIC_CERTIFICATE=$(gpg --armor --export "${EMAIL}" | base64)
+  PUBLIC_CERTIFICATE=$(gpg --armor --export "${EMAIL}" | base64 -w0)
   #PUBLIC_CERTIFICATE=$( echo -n "${PUBLIC_CERTIFICATE}" | tr '\n' '@' | sed -E 's/@//g' )
 
   #Terraform requires a JSON response from a script
@@ -51,5 +53,5 @@ function generate_keys() {
   echo "${JSON_STRING_RESULT}"
 }
 
-#parse_input
+parse_input
 generate_keys

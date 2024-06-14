@@ -9,21 +9,19 @@ function parse_input() {
   if [[ -z "${NAME}" ]]; then export NAME=none; fi
 }
 
-export EMAIL="huayuenh@ie.ibm.com"
-export NAME="hyhyh"
+SIGNING_KEY="placeholder"
+PUBLIC_CERTIFICATE="placeholder"
 function createKey {
     /usr/bin/expect << END 
         set timeout -1
-        spawn bash
-        send "gpg --pinentry-mode loopback --passphrase='' --generate-key\r"
+        spawn bash -c "gpg --pinentry-mode loopback --passphrase='' --generate-key"
         expect "Real name: "
         send -- "$NAME\n"
         expect "Email address: "
         send -- "$EMAIL\n"
         expect "Change (N)ame, (E)mail, or (O)kay/(Q)uit? "
-        send -- "q\r"
+        send -- "o\r"
         expect EOF
-        close
 END
 }
 
@@ -31,22 +29,27 @@ function generate_keys() {
   KEY_LIST=$(gpg --list-secret-keys)
 
   if [[ "${KEY_LIST}" != *"${EMAIL}"* ]]; then
-    createKey
+    $(createKey) &
   fi
 
- # sleep 10
-
-  #Export the signing key
-  SIGNING_KEY=$(gpg --export-secret-key "${EMAIL}" | base64)
-  #SIGNING_KEY=$( echo -n "${SIGNING_KEY}" | tr '\n' '@' | sed -E 's/@//g' )
-  #Export the public signing certifacate
-  PUBLIC_CERTIFICATE=$(gpg --armor --export "${EMAIL}" | base64)
-  #PUBLIC_CERTIFICATE=$( echo -n "${PUBLIC_CERTIFICATE}" | tr '\n' '@' | sed -E 's/@//g' )
-
+  #Test the keystore for the signing key creation
+  max=10
+  for (( i=0; i < $max; ++i ))
+  do
+    KEY_LIST=$(gpg --list-secret-keys)
+    if [[ "${KEY_LIST}" != *"${EMAIL}"* ]]; then
+      sleep 10
+    else
+      #Export the signing key
+      SIGNING_KEY=$(gpg --export-secret-key "${EMAIL}" | base64)
+      PUBLIC_CERTIFICATE=$(gpg --armor --export "${EMAIL}" | base64)
+      i=$max
+    fi
+  done
+  
   #Terraform requires a JSON response from a script
   JSON_STRING_RESULT=$( jq -n --arg signing_key "$SIGNING_KEY" --arg public_key "$PUBLIC_CERTIFICATE" '{signingkey: $signing_key, publickey: $public_key}' )
-  #clean up
-  #rm -rf "${FILE}"
+
   #return response
   echo "${JSON_STRING_RESULT}"
 }

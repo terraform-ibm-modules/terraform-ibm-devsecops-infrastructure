@@ -12,7 +12,6 @@ function parse_input() {
 export EMAIL="huayuenh@ie.ibm.com"
 export NAME="hyhyh"
 function createKey {
-  SSH_PID=$(
     /usr/bin/expect << END 
         set timeout -1
         spawn bash
@@ -26,14 +25,13 @@ function createKey {
         expect EOF
         close -i $SSH_PID
 END
-)
 }
 
 function generate_keys() {
   KEY_LIST=$(gpg --list-secret-keys)
 
   if [[ "${KEY_LIST}" != *"${EMAIL}"* ]]; then
-    $(createKey) &
+    createKey
   fi
 
   sleep 10

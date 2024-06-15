@@ -14,11 +14,14 @@ function parse_input() {
     {
       echo "%echo Generating GPG key"
       echo "Key-Type: RSA"
-      echo "Key-Length: 2048"
+      echo "Key-Length: 3072"
       echo "Subkey-Type: RSA"
       echo "Subkey-Length: 2048"
+      echo "Key-Usage: cert, sign"
+      echo "Subkey-Usage: encrypt"
       echo "Name-Real: ${NAME}"
       echo "Name-Email: ${EMAIL}"
+      echo "Expire-Date: 2y"
       echo "%no-ask-passphrase"
       echo "%no-protection"
       echo "%commit"
@@ -28,9 +31,9 @@ function parse_input() {
     #Generate a GPG key
     gpg --batch --gen-key "${FILE}"
     #Export the signing key
-    SIGNING_KEY=$(gpg --export-secret-key "${EMAIL}" | base64)
+    SIGNING_KEY=$(gpg --export-secret-key "${EMAIL}" | base64 -w0)
     #Export the public signing certifacate
-    PUBLIC_CERTIFICATE=$(gpg --armor --export "${EMAIL}" | base64)
+    PUBLIC_CERTIFICATE=$(gpg --armor --export "${EMAIL}" | base64 -w0)
 
     #Terraform requires a JSON response from a script
     JSON_STRING_RESULT=$( jq -n --arg signing_key "$SIGNING_KEY" --arg public_key "$PUBLIC_CERTIFICATE" '{signingkey: $signing_key, publickey: $public_key}' )

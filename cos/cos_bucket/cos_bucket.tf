@@ -22,7 +22,7 @@ resource "ibm_cos_bucket" "smart" {
 }
 
 resource "ibm_cos_bucket" "smart_lite" {
-  count                = ((var.existing_bucket_name == "") && (var.enable_retention == false)) ? 0 : 1
+  count                = ((var.existing_bucket_name == "") && (var.enable_retention == false)) ? 1 : 0
   bucket_name          = (var.add_cos_bucket_name_suffix) ? format("%s-%s", var.bucket_name, random_string.resource_suffix[0].result) : var.bucket_name
   resource_instance_id = var.cos_instance_id
   region_location      = var.bucket_region

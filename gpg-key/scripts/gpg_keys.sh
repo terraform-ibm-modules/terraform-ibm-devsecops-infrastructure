@@ -36,10 +36,11 @@ function generate_keys() {
   KEY_LIST=$(gpg --list-secret-keys)
 
   if [[ "${KEY_LIST}" != *"${EMAIL}"* ]]; then
+    # shellcheck disable=SC2091
     $(createKey)
   fi
 
-  
+
   #Export the signing key
   SIGNING_KEY=$(gpg --export-secret-key "${EMAIL}" | base64 -w0)
   #Export the public signing certifacate
@@ -48,7 +49,7 @@ function generate_keys() {
   JSON_STRING_RESULT=$( jq -n --arg signing_key "$SIGNING_KEY" --arg public_key "$PUBLIC_CERTIFICATE" '{signingkey: $signing_key, publickey: $public_key}' )
 
   #return response
- 
+
   echo "${JSON_STRING_RESULT}"
 }
 

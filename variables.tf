@@ -64,7 +64,7 @@ variable "create_cd_instance" {
 variable "cd_instance_region" {
   type        = string
   description = "The CD instance region."
-  default     = "us-south"
+  default     = ""
 }
 
 variable "cd_instance_name" {

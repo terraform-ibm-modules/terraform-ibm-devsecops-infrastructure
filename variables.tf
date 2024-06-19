@@ -64,7 +64,7 @@ variable "create_cd_instance" {
 variable "cd_instance_region" {
   type        = string
   description = "The CD instance region."
-  default     = "us-south"
+  default     = ""
 }
 
 variable "cd_instance_name" {
@@ -151,6 +151,18 @@ variable "cos_bucket_name" {
   type        = string
   description = "Set the name of your COS bucket."
   default     = "devsecops"
+}
+
+variable "cos_bucket_type" {
+  type        = string
+  description = "The type of the bucket. Supported values are `single_site_location`, `region_location`, and `cross_region_location`."
+  default     = "region_location"
+}
+
+variable "existing_bucket_name" {
+  type        = string
+  description = "Set the name of an existing COS bucket."
+  default     = ""
 }
 
 variable "cos_default_retention" {
@@ -242,6 +254,12 @@ variable "sm_service_endpoints" {
   type        = string
   description = "The types of service endpoints supported by Secrets Manager. Can be `public`, `private` or `public-and-private`."
   default     = "public-and-private"
+}
+
+variable "sm_group_endpoint_type" {
+  type        = string
+  description = "The types of service endpoints to target for the secret group`."
+  default     = "public"
 }
 
 variable "sm_service_plan" {

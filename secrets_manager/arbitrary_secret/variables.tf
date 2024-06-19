@@ -46,3 +46,9 @@ variable "region" {
   description = "The Secrets Manager location"
   default     = ""
 }
+
+variable "sm_endpoint_type" {
+  type        = string
+  description = "The Endpoint type."
+  default     = ""
+}

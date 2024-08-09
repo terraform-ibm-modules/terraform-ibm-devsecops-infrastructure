@@ -20,7 +20,7 @@ A Terraform module for provisioning the infrastructure required by the DevSecOps
 
 ```hcl
 module "terraform_devsecops_infra" {
-  source                   = "git::https://github.com/terraform-ibm-modules/terraform-ibm-devsecops-infrastructure?ref=v1.2.0-beta.5"
+  source                   = "git::https://github.com/terraform-ibm-modules/terraform-ibm-devsecops-infrastructure?ref=v1.3.0"
   region                   = "us-south"
   resource_group           = "my-resource-group" #creates the resource group
   #or

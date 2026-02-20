@@ -1,9 +1,9 @@
 #!/bin/bash
 
-dnf install pinentry -y
+dnf install pinentry -y >&2
 
 function parse_input() {
-  eval "$(jq -r '@sh "export EMAIL=\(.email) NAME=\(.name)"')"
+  eval "$(jq -r '@sh "export EMAIL=\(.email) NAME=\(.name)"' < /dev/stdin)"
   if [[ -z "${EMAIL}" ]]; then export EMAIL=none; fi
   if [[ -z "${NAME}" ]]; then export NAME=none; fi
 }
@@ -28,16 +28,16 @@ function createKey {
       echo "%echo done"
     } >> "${FILE}"
 
-    gpg --batch --gen-key "${FILE}"
+    gpg --batch --gen-key "${FILE}" >/dev/null 2>&1
     rm -rf "${FILE}"
 }
 
 function generate_keys() {
-  KEY_LIST=$(gpg --list-secret-keys)
+  KEY_LIST=$(gpg --list-secret-keys 2>/dev/null || true)
 
   if [[ "${KEY_LIST}" != *"${EMAIL}"* ]]; then
     # shellcheck disable=SC2091
-    $(createKey)
+    createKey
   fi
 
 
